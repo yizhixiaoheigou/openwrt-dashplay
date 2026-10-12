@@ -1,0 +1,13 @@
+{
+	"admin/services/dashplay": {
+		"title": "DashPlay",
+		"action": {
+			"type": "view",
+			"path": "dashplay"
+		},
+		"depends": {
+			"acl": [ "luci-app-dashplay" ],
+			"uci": { "dashplay": true }
+		}
+	}
+}

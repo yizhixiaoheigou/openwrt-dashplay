@@ -1,0 +1,31 @@
+#!/bin/sh /etc/rc.common
+# DashPlay: CarPlay in the car's web browser (/opt/dashplay/supervisor_openwrt.py).
+# Settings: uci dashplay (LuCI: Services → DashPlay); iPhones: the DashPlay settings page.
+START=99
+STOP=10
+USE_PROCD=1
+
+start_service() {
+	local enabled
+	config_load dashplay
+	config_get_bool enabled main enabled 1
+	[ "$enabled" = 1 ] || return 0
+	procd_open_instance
+	procd_set_param command /usr/bin/python3 /opt/dashplay/supervisor_openwrt.py --root /opt/dashplay
+	# The supervisor restarts itself when the Wi-Fi it hands the iPhone changes; procd covers crashes.
+	procd_set_param respawn 3600 20 0
+	# The JVM writes its startup cache while exiting.
+	procd_set_param term_timeout 45
+	procd_set_param stdout 1
+	procd_set_param stderr 1
+	procd_close_instance
+}
+
+service_triggers() {
+	procd_add_reload_trigger dashplay
+}
+
+reload_service() {
+	stop
+	start
+}

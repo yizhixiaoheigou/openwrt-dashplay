@@ -1,0 +1,12 @@
+{
+	"luci-app-dashplay": {
+		"description": "Grant access to DashPlay settings",
+		"read": {
+			"ubus": { "service": [ "list" ] },
+			"uci": [ "dashplay", "wireless" ]
+		},
+		"write": {
+			"uci": [ "dashplay" ]
+		}
+	}
+}

@@ -1,0 +1,55 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: zh_Hans\n"
+
+msgid "DashPlay"
+msgstr "DashPlay"
+
+msgid "CarPlay in the car's web browser. Set up Wi-Fi under Network → Wireless as usual; DashPlay hands one of these networks to the iPhone over Bluetooth, and the head unit opens the CarPlay page on the same network."
+msgstr "在车机浏览器里用 CarPlay。WiFi 照常在「网络 → 无线」里设置；DashPlay 经蓝牙把其中一个 WiFi 交给 iPhone，车机连同一个 WiFi 打开 CarPlay 画面。"
+
+msgid "Status"
+msgstr "状态"
+
+msgid "Running"
+msgstr "运行中"
+
+msgid "Not running"
+msgstr "未运行"
+
+msgid "Open"
+msgstr "打开"
+
+msgid "DashPlay settings (add iPhone)"
+msgstr "DashPlay 设置（添加 iPhone）"
+
+msgid "CarPlay screen"
+msgstr "CarPlay 画面"
+
+msgid "Enable"
+msgstr "启用"
+
+msgid "Wi-Fi handed to the iPhone"
+msgstr "交给 iPhone 的 WiFi"
+
+msgid "The iPhone joins this network for wireless CarPlay. The router's own access point works best; a network the router joins as a client must be in a firewall zone that accepts input."
+msgstr "无线 CarPlay 时 iPhone 连这个 WiFi。最好用路由器自己的热点；路由器作为客户端连接的网络，必须在允许入站的防火墙区域里。"
+
+msgid "Automatic (first access point, 5 GHz first)"
+msgstr "自动（第一个热点，优先 5 GHz）"
+
+msgid "access point"
+msgstr "热点"
+
+msgid "client"
+msgstr "客户端"
+
+msgid "Settings page port"
+msgstr "设置页端口"
+
+msgid "Address name"
+msgstr "访问名称"
+
+msgid "On the router's access point the head unit opens %s"
+msgstr "车机连上路由器热点后打开 %s"
