@@ -1,12 +1,14 @@
 # openwrt-dashplay
 
+[English](README.en.md)
+
 [DashPlay](https://github.com/yizhixiaoheigou/DashPlay) 的 OpenWrt 软件包：在 OpenWrt 25.12 路由器或随身 WiFi 上接收 iPhone 的 CarPlay，车机或任何设备用浏览器显示、出声、触控。
 
 - `dashplay`：程序与开机服务（`/opt/dashplay`、`/etc/init.d/dashplay`、`/etc/config/dashplay`），各架构通用。程序本身来自 DashPlay 每次发布附带的 `dashplay-bundle-<版本>.tar`（`dashplay/Makefile` 里的 `PKG_SOURCE_URL` 与 `PKG_HASH`），本仓库不另存一份源码。
 - `dashplay-jre`：Eclipse Temurin 21 JRE 的 musl 版（OpenWrt 没有 Java），aarch64 与 x86_64。
 - `luci-app-dashplay`（含中文）：后台「服务 → DashPlay」。
 
-**不懂技术也能装**：买好斐讯 N1、玩客云、ZTE F50（已刷 OpenWrt）或其他 OpenWrt 路由器后，把下面这句话发给你的 AI 助手（Claude Code、Codex 等能在电脑上执行命令的那种），它会问清楚你的设备，一步步帮你装好，只在需要你插拔电源、在手机上点选时叫你：
+**不懂技术也能装**：买好斐讯 N1、玩客云、ZTE F50（已刷 OpenWrt）或其他 OpenWrt 路由器后，把下面这句话发给你的 AI 助手（Claude Code、Codex、WorkBuddy、豆包、DeepSeek 等都可以），它会问清楚你的设备，一步步帮你装好，只在需要你插拔电源、在手机上点选时叫你：
 
 > 请阅读 https://github.com/yizhixiaoheigou/DashPlay/blob/main/skills/dashplay-install/SKILL.md ，按它一步步帮我把 DashPlay 装好。
 
@@ -28,14 +30,14 @@
 ```sh
 cd /tmp
 apk update
-apk add --allow-untrusted dashplay-jre-*.apk dashplay-2*.apk luci-app-dashplay-*.apk luci-i18n-dashplay-zh-cn-*.apk
+apk add --allow-untrusted dashplay-jre-*_$(cat /etc/apk/arch).apk dashplay-2*.apk luci-app-dashplay-*.apk luci-i18n-dashplay-zh-cn-*.apk
 # 无线 CarPlay（蓝牙）；用 USB 蓝牙棒时再加 kmod-btusb：
 apk add bluez-daemon
 # 有线 CarPlay（数据线）：
 apk add kmod-tun
 ```
 
-`dashplay-jre` 选和路由器一致的那个（`cat /etc/apk/arch` 看架构，例如 `aarch64_cortex-a53`）。包没有签名，所以要加 `--allow-untrusted`。
+`dashplay-jre` 每种架构一个包，上面的命令按 `cat /etc/apk/arch` 自动选对应的那个（只下载那一个也行）。包没有签名，所以要加 `--allow-untrusted`。
 
 ## 3. 放入 CarPlay 认证文件
 
