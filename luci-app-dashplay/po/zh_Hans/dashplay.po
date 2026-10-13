@@ -51,5 +51,47 @@ msgstr "设置页端口"
 msgid "Address name"
 msgstr "访问名称"
 
-msgid "On the router's access point the head unit opens %s"
-msgstr "车机连上路由器热点后打开 %s"
+msgid "The head unit opens the CarPlay page by this name, which the router answers on its own Wi-Fi; the page's certificate is made for it. On the router's access point the head unit opens %s"
+msgstr "车机用这个名字打开 CarPlay 画面，名字由路由器在自己的 WiFi 里解析，画面的证书也是为它签的。车机连上路由器热点后打开 %s"
+
+msgid "Public IPv6 address for the name"
+msgstr "访问名称指向公网 IPv6"
+
+msgid "Some head units refuse to open a LAN address. The name can also point at this router's own public IPv6 address: the head unit then sees a public address, while the picture still comes straight over the Wi-Fi. Needs a public IPv6 address on the router and IPv6 handed on to its Wi-Fi. \"Only\" helps to check that it works; the DashPlay settings page then opens by the LAN address, not by the name."
+msgstr "有的车机不让打开局域网地址。访问名称可以同时指向本路由器自己的公网 IPv6 地址：车机看到的是公网地址，画面仍然直接走 WiFi，不经过外网、不耗流量。需要路由器有公网 IPv6，并把 IPv6 分给 WiFi 里的设备。「只用」便于确认这条路是否通；这时 DashPlay 设置页要用局域网地址打开，不能用访问名称。"
+
+msgid "No (LAN address only)"
+msgstr "不用（只用局域网地址）"
+
+msgid "Also (beside the LAN address)"
+msgstr "同时（与局域网地址并存）"
+
+msgid "Only (instead of the LAN address)"
+msgstr "只用（不给局域网地址）"
+
+msgid "Release the iPhone after (seconds)"
+msgstr "无人观看多久后释放 iPhone（秒）"
+
+msgid "Without any page showing the picture for this long, wireless CarPlay ends and the iPhone stops sending its screen; opening the page invites it again (about 7 s). 0: never end it."
+msgstr "没有任何网页在看画面超过这个时间，就结束无线 CarPlay，iPhone 不再持续发送画面、不会发热；之后打开网页会重新邀请（约 7 秒出画面）。填 0 表示永不结束。"
+
+msgid "Own name (DuckDNS sub-domain)"
+msgstr "自己的域名（DuckDNS 子域名）"
+
+msgid "Only needed when the head unit's browser blocks the certificate warning with no way to continue. Sign up for free at duckdns.org, add a sub-domain and enter it with the token shown there. The address name then becomes that name (e.g. mycar.duckdns.org): DashPlay points it at this router and obtains a free Let's Encrypt certificate, renewed automatically, so the head unit opens the page without a warning. No port needs to be opened; the router needs internet access."
+msgstr "只在车机浏览器拦截证书警告、没有「继续访问」时需要。在 duckdns.org 免费注册并建一个子域名，把子域名和页面上的 token 填在这里。访问名称会变成这个域名（如 mycar.duckdns.org）：DashPlay 把它指向本路由器，并申请免费的 Let’s Encrypt 正式证书、到期前自动续签，车机打开时不再有证书警告。不需要开放任何端口，路由器要能上网。"
+
+msgid "DuckDNS token"
+msgstr "DuckDNS token"
+
+msgid "General"
+msgstr "常规"
+
+msgid "When the head unit cannot open the page"
+msgstr "车机打不开画面时"
+
+msgid "Usually not needed"
+msgstr "一般用不到"
+
+msgid "Try in this order: 1. The head unit warns that the certificate is not trusted: tap continue. 2. It offers no way to continue: install the DashPlay CA certificate on the head unit (DashPlay settings page, \"Download the box CA certificate\"), or, when it cannot install one, set an own name below. 3. It refuses to open a LAN address such as 192.168.x.x: set \"Public IPv6 address for the name\" to \"Also\"."
+msgstr "按顺序试：① 车机提示证书不安全：点「继续访问」即可。② 没有「继续访问」：在车机上装 DashPlay 的 CA 证书（DashPlay 设置页「下载盒子 CA 证书」）；车机不让装，就在下面设置「自己的域名」。③ 车机不让打开 192.168.x.x 这类局域网地址：把「访问名称指向公网 IPv6」选为「同时」。"

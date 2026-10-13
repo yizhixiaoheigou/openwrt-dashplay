@@ -6,12 +6,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=dashplay
-PKG_VERSION:=2026.10.12
+PKG_VERSION:=2026.10.13
 PKG_RELEASE:=1
 PKG_LICENSE:=GPL-3.0-only
 PKG_SOURCE:=dashplay-bundle-$(PKG_VERSION).tar
 PKG_SOURCE_URL:=https://github.com/yizhixiaoheigou/DashPlay/releases/download/v$(PKG_VERSION)/
-PKG_HASH:=27f6712f0ed43cc5bcd401c54dbacc5b2e3c8a88b6143c7752be9e1cf2337aa1
+PKG_HASH:=6abb03051ea2b2564d9bae76d66f4c9ae7c7a98acbcf083f080a610f5aa56adc
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -24,7 +24,8 @@ define Package/dashplay
   # Wireless CarPlay also needs bluez-daemon and a Bluetooth adapter; wired CarPlay needs kmod-tun and a
   # USB host port. Neither is a hard dependency: some boards (ZTE F50) run their own BlueZ, and kernel
   # packages must match the board's kernel.
-  EXTRA_DEPENDS:=python3 (>=3.11), ip-full (>=6.0), iw (>=5.0), openssl-util (>=3.0), dashplay-jre (>=21)
+  # curl: acme.sh, for the optional own name's certificate (duckdns_domain); BusyBox/uclient wget will not do.
+  EXTRA_DEPENDS:=python3 (>=3.11), ip-full (>=6.0), iw (>=5.0), openssl-util (>=3.0), curl (>=8.0), dashplay-jre (>=21)
 endef
 
 define Package/dashplay/description
@@ -71,11 +72,16 @@ define Package/dashplay/prerm
 /etc/init.d/dashplay stop
 /etc/init.d/dashplay disable
 # Files the running program made beside the packaged ones; state/ and identity/ stay.
-rm -f /opt/dashplay/playport/web/dist/receiver-access.js
+rm -f /opt/dashplay/playport/web/dist/receiver-access.js /opt/dashplay/playport/web/dist/receiver-access.json
 find /opt/dashplay -name __pycache__ -type d -prune -exec rm -rf {} +
-if [ "$$(uci -q get dhcp.dashplay)" = domain ]; then
-	uci delete dhcp.dashplay && uci commit dhcp && /etc/init.d/dnsmasq reload
-fi
+# The name's records (uci dashplay.main.public_ipv6 adds "dashplay6" and, alone, a local-only entry).
+name=$$(uci -q get dhcp.dashplay.name || uci -q get dhcp.dashplay6.name)
+changed=
+for section in dashplay dashplay6; do
+	[ "$$(uci -q get dhcp.$$section)" = domain ] && uci delete dhcp.$$section && changed=1
+done
+[ -n "$$name" ] && uci -q del_list dhcp.@dnsmasq[0].server="/$$name/" && changed=1
+[ -n "$$changed" ] && uci commit dhcp && /etc/init.d/dnsmasq reload
 exit 0
 endef
 
