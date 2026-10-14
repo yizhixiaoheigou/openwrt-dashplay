@@ -6,12 +6,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=dashplay
-PKG_VERSION:=2026.10.13
+PKG_VERSION:=2026.10.14
 PKG_RELEASE:=1
 PKG_LICENSE:=GPL-3.0-only
 PKG_SOURCE:=dashplay-bundle-$(PKG_VERSION).tar
 PKG_SOURCE_URL:=https://github.com/yizhixiaoheigou/DashPlay/releases/download/v$(PKG_VERSION)/
-PKG_HASH:=6abb03051ea2b2564d9bae76d66f4c9ae7c7a98acbcf083f080a610f5aa56adc
+PKG_HASH:=df0e2db6d3388c60cadf834d9a8e664f1e86de1e3162b242a13cb97433130db3
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -81,7 +81,22 @@ for section in dashplay dashplay6; do
 	[ "$$(uci -q get dhcp.$$section)" = domain ] && uci delete dhcp.$$section && changed=1
 done
 [ -n "$$name" ] && uci -q del_list dhcp.@dnsmasq[0].server="/$$name/" && changed=1
-[ -n "$$changed" ] && uci commit dhcp && /etc/init.d/dnsmasq reload
+if [ -n "$$changed" ]; then
+	uci commit dhcp || exit 1
+	# Reloading a stopped dnsmasq can start it and wait indefinitely for netifd/procd locks.
+	# Python is still installed while prerm runs; OpenWrt busybox need not include timeout.
+	python3 - <<'PY'
+import json, subprocess
+try:
+    result = subprocess.run(['ubus', '-t', '5', 'call', 'service', 'list', '{"name":"dnsmasq"}'],
+                            capture_output=True, text=True, timeout=6, check=True)
+    instances = json.loads(result.stdout).get('dnsmasq', {}).get('instances', {})
+    if any(instance.get('running') is True for instance in instances.values()):
+        subprocess.run(['/etc/init.d/dnsmasq', 'reload'], timeout=15, check=True)
+except (OSError, ValueError, subprocess.SubprocessError):
+    print('DashPlay DNS records removed from configuration; DNS reload unavailable, apply on next service restart.')
+PY
+fi
 exit 0
 endef
 

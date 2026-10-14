@@ -93,5 +93,35 @@ msgstr "车机打不开画面时"
 msgid "Usually not needed"
 msgstr "一般用不到"
 
-msgid "Try in this order: 1. The head unit warns that the certificate is not trusted: tap continue. 2. It offers no way to continue: install the DashPlay CA certificate on the head unit (DashPlay settings page, \"Download the box CA certificate\"), or, when it cannot install one, set an own name below. 3. It refuses to open a LAN address such as 192.168.x.x: set \"Public IPv6 address for the name\" to \"Also\"."
-msgstr "按顺序试：① 车机提示证书不安全：点「继续访问」即可。② 没有「继续访问」：在车机上装 DashPlay 的 CA 证书（DashPlay 设置页「下载盒子 CA 证书」）；车机不让装，就在下面设置「自己的域名」。③ 车机不让打开 192.168.x.x 这类局域网地址：把「访问名称指向公网 IPv6」选为「同时」。"
+msgid "Try in this order: 1. The head unit warns that the certificate is not trusted: tap continue. 2. It offers no way to continue: install the DashPlay CA certificate on the head unit (DashPlay settings page, \"Download the box CA certificate\"), or, when it cannot install one, set an own name below. 3. It refuses to open a LAN address such as 192.168.x.x, even by name (Tesla does): turn on \"Head unit refuses every LAN address\" below, or, when the router and the head unit have IPv6, set \"Public IPv6 address for the name\" to \"Also\"."
+msgstr "按顺序试：① 车机提示证书不安全：点「继续访问」即可。② 没有「继续访问」：在车机上装 DashPlay 的 CA 证书（DashPlay 设置页「下载盒子 CA 证书」）；车机不让装，就在下面设置「自己的域名」。③ 车机不让打开 192.168.x.x 这类局域网地址（用名称也不行，特斯拉就是这样）：勾选下面的「车机不让开任何局域网地址」；或者在路由器和车机都有 IPv6 时，把「访问名称指向公网 IPv6」选为「同时」。"
+
+msgid "Head unit refuses every LAN address (e.g. Tesla)"
+msgstr "车机不让开任何局域网地址（如特斯拉）"
+
+msgid "Tesla's browser opens no LAN address such as 192.168.x.x, not even by name. Turned on, the router's own Wi-Fi network moves to %s (devices get 100.96.0.x): that range is not a private one, so such browsers open it, and the address name and own name follow. Afterwards open this admin page at %s and reconnect the head unit and phones to the Wi-Fi. Turning it off puts the previous address back."
+msgstr "特斯拉的浏览器不让打开 192.168.x.x 这类局域网地址，用名称也不行。勾选后，路由器自己 WiFi 的网段改成 %s（设备拿到 100.96.0.x）：这段地址不算局域网地址，这类浏览器就能打开；访问名称和自己的域名会自动跟着改。改完请用 %s 打开本后台，车机和手机重新连一次 WiFi。取消勾选会改回原来的地址。"
+
+msgid "Tesla mode"
+msgstr "特斯拉模式"
+
+msgid "For a Tesla. The router's Wi-Fi network moves to %s, which the Tesla browser opens (it refuses LAN addresses such as 192.168.x.x); music, calls and Siri are left to the car (both switches below, turned on); the fullscreen button works in the Tesla browser. Pair the iPhone with the Tesla over Bluetooth and pick it as the media source. In the Tesla's Wi-Fi settings turn on \"Remain connected in Drive\", else the picture stops out of Park. Afterwards open this admin page at %s and reconnect the car and phones to the Wi-Fi. Turning it off puts the previous address back."
+msgstr "给特斯拉用。路由器 WiFi 的网段改成 %s，特斯拉浏览器才能打开（它不让开 192.168.x.x 这类局域网地址）；音乐、通话和 Siri 交给车（相当于勾上下面两项）；全屏按钮在特斯拉浏览器里可用。iPhone 用蓝牙连特斯拉，并在特斯拉里把媒体来源选成这部 iPhone。在特斯拉的 WiFi 设置里打开「行驶中保持连接」，否则出 P 挡画面就停。改完请用 %s 打开本后台，车和手机重新连一次 WiFi。取消勾选会改回原来的地址。"
+
+msgid "Music over the car's Bluetooth"
+msgstr "音乐走车机蓝牙"
+
+msgid "Pair the iPhone with the car over Bluetooth and pick it as the media source: the steering wheel, media card and volume then work as with any phone. The CarPlay page shows the screen and plays navigation prompts, louder. If music ever comes without sound, choose the car as audio output in the iPhone's Control Center."
+msgstr "iPhone 用蓝牙连车机，并在车机里把媒体来源选成这部 iPhone：方向盘切歌、媒体卡片、音量就和普通手机一样用。CarPlay 网页负责画面和导航播报（播报会放大）。偶尔放歌没声音时，在 iPhone 控制中心把音频输出选成车机。"
+
+msgid "Calls and Siri over the car's Bluetooth"
+msgstr "通话与 Siri 走车机蓝牙"
+
+msgid "Calls and Siri use the car's own microphone and speakers through its Bluetooth (the iPhone must be paired with the car), not the CarPlay page. Worth a try when calls through the page echo."
+msgstr "通话和 Siri 用车机自己的麦克风和喇叭（iPhone 要先用蓝牙连上车机），不经过 CarPlay 网页。网页通话有回声时可以试试。"
+
+msgid "Network warning"
+msgstr "网络提示"
+
+msgid "Network check unavailable (service starting or stopped)."
+msgstr "网络检查暂不可用（服务启动中或已停止）。"

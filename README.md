@@ -51,9 +51,13 @@ apk add kmod-tun
 
 WiFi 名称、密码或信道在后台改了以后，DashPlay 会自动跟着改，不用重装。
 
-**车机打不开画面时**：一般用不到，按顺序只做需要的一步——提示证书不安全但有「继续访问」：点继续；没有继续选项：装 DashPlay 的 CA 证书（设置页「下载盒子 CA 证书」）或用下面的「自己的域名」；车机不让打开局域网地址：用下面的「访问名称指向公网 IPv6」。这几项都在后台「服务 → DashPlay → 车机打不开画面时」标签里，每项都写了它解决什么问题。
+**车机打不开画面时**：一般用不到，按顺序只做需要的一步——提示证书不安全但有「继续访问」：点继续；没有继续选项：装 DashPlay 的 CA 证书（设置页「下载盒子 CA 证书」）或用下面的「自己的域名」；车机不让打开局域网地址：用下面的「车机不让开任何局域网地址」或「访问名称指向公网 IPv6」。这几项都在后台「服务 → DashPlay → 车机打不开画面时」标签里，每项都写了它解决什么问题。
 
 **车机不让打开局域网地址时（可选）**：有的车机浏览器拒绝访问 `192.168.x.x` 这类局域网地址。路由器有公网 IPv6、并把 IPv6 分给 WiFi 里的设备时，可以在后台「服务 → DashPlay → 车机打不开画面时」把「访问名称指向公网 IPv6」设为「同时」：访问名称（如 `dashplay.lan`）还会指向路由器自己的公网 IPv6 地址，车机看到的是公网地址，但这个地址就是路由器自己，画面仍然直接走 WiFi，不经过外网、不耗流量。地址变了（移动网络重新拨号）DashPlay 会自动跟着改。「只用」去掉局域网地址，便于确认这条路是否通；这时 DashPlay 设置页要用 `http://路由器地址:18080/` 打开。车机必须连着路由器的 WiFi；车机热点在设备之间的隔离、只放行白名单网站等限制这样也绕不过。命令：`uci set dashplay.main.public_ipv6=1 && uci commit dashplay && /etc/init.d/dashplay restart`。
+
+**特斯拉（可选）**：在后台「服务 → DashPlay → 常规」打开「特斯拉模式」：路由器自己 WiFi 的网段改成 `100.96.0.1/24`（特斯拉浏览器不让开 `192.168.x.x` 这类局域网地址，用名称也不行；这段运营商共享地址它能开），访问名称和自己的域名自动跟着改；音乐、电话、Siri 交给特斯拉蓝牙（iPhone 用蓝牙连特斯拉并选为媒体来源，方向盘、媒体卡片、音量都是原生的），网页负责画面和导航播报（播报放大）；CarPlay 网页右上角的全屏经腾讯视频、1905 跳转回本页、去掉地址栏。**特斯拉 WiFi 必须打开「行驶中保持连接」**，否则一出 P 挡（倒车、开车）就断开 WiFi，画面中断到挂回 P 挡。打开后车机和手机重连一次 WiFi，后台改用 `http://100.96.0.1/`；取消勾选改回原来的地址。特斯拉搜不到 WiFi 时把地区设为中国、信道改 149。别的车拒绝局域网地址时，可在「车机打不开画面时」只勾选「车机不让开任何局域网地址」改网段。
+
+**声音走车机蓝牙（可选，任何车）**：车机自己能用蓝牙连 iPhone 时，在「常规」勾选「音乐走车机蓝牙」：方向盘切歌、媒体卡片、音量都用车机原生的，网页只负责画面和导航播报（播报放大）；勾选「通话与 Siri 走车机蓝牙」：通话和 Siri 用车机自己的麦克风和喇叭，不经过网页（网页通话有回声时可以试）。两项可单独用，特斯拉模式已包含。iPhone 要先用蓝牙连上车机并选为媒体来源。命令：`uci set dashplay.main.car_music=1`（或 `car_voice=1`），再 `uci commit dashplay && /etc/init.d/dashplay restart`。特斯拉哪次更新把这段地址也拦了，这个办法就失效。
 
 **车机浏览器拦截证书、没有「继续访问」时（可选）**：在 duckdns.org 免费注册一个子域名，在后台「服务 → DashPlay → 车机打不开画面时」填「自己的域名」（如 `mycar`）和「DuckDNS token」。访问名称会变成 `mycar.duckdns.org`：DashPlay 把它指向路由器，并用内置的 acme.sh 向 Let's Encrypt 申请免费正式证书（DNS 验证，不需要开放端口，路由器要能上网），到期前自动续签；证书在 DashPlay 下次启动时启用，之后车机打开 `https://mycar.duckdns.org:18443/` 不再有证书警告。DashPlay 设置页「车机打不开画面时」里能看到进度和有效期。
 
@@ -88,7 +92,7 @@ uci set dashplay.main.dbus_address='unix:path=/var/run/dashplay/bluetooth/system
 uci commit dashplay && /etc/init.d/dashplay restart
 ```
 
-F50 的 USB 口不能当主机，只能无线。本仓库不包含为 F50 刷入 OpenWrt 的任何工具或固件。
+F50 的 USB 口不能当主机，只能无线。原厂 B16 的备份、Root 和 SD OpenWrt 路线见 [AI 装机 skill](https://github.com/yizhixiaoheigou/DashPlay/blob/main/skills/dashplay-install/SKILL.md)。相关源码工具在主仓库；本仓库仍不分发原厂固件、设备备份或认证文件。
 
 ## 自己打包
 
@@ -107,3 +111,7 @@ DashPlay 发布新版本后，下载它的 `dashplay-bundle-<版本>.tar`，运�
 ## 许可与商标
 
 GPL-3.0，见 [LICENSE](LICENSE) 与 [NOTICE.md](NOTICE.md)。CarPlay、iPhone、AirPlay 和 MFi 是 Apple Inc. 的商标；本项目与 Apple 无从属或背书关系。
+
+## 升级现有设备
+
+按 [装机 skill 的“升级已装好的盒子”](https://github.com/yizhixiaoheigou/DashPlay/blob/main/skills/dashplay-install/SKILL.md) 先把程序、设置、配对与认证备份到电脑，再用 `apk add --upgrade --simulate --allow-untrusted /tmp/dashplay-upgrade/*.apk` 检查本次四个包，确认后去掉 `--simulate` 执行。不要卸载重装或覆盖 state/identity。F50 保留独立 BlueZ，出现内核/kmod 升级计划就停止。特斯拉模式运行中每 10 秒检查上游地址冲突，设置页和 LuCI 会显示警告；不会自动变更网络。

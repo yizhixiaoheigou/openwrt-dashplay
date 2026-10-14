@@ -1,12 +1,29 @@
 {
-	"luci-app-dashplay": {
-		"description": "Grant access to DashPlay settings",
-		"read": {
-			"ubus": { "service": [ "list" ] },
-			"uci": [ "dashplay", "wireless" ]
-		},
-		"write": {
-			"uci": [ "dashplay" ]
-		}
-	}
+  "luci-app-dashplay": {
+    "description": "Grant access to DashPlay settings",
+    "read": {
+      "ubus": {
+        "service": [
+          "list"
+        ],
+        "file": [
+          "read"
+        ]
+      },
+      "uci": [
+        "dashplay",
+        "wireless"
+      ],
+      "file": {
+        "/var/run/dashplay/network-status.json": [
+          "read"
+        ]
+      }
+    },
+    "write": {
+      "uci": [
+        "dashplay"
+      ]
+    }
+  }
 }
