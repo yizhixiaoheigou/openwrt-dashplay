@@ -10,7 +10,7 @@
 
 **不懂技术也能装**：买好斐讯 N1、玩客云、ZTE F50（已刷 OpenWrt）或其他 OpenWrt 路由器后，把下面这句话发给你的 AI 助手（Claude Code、Codex、WorkBuddy、豆包、DeepSeek 等都可以），它会问清楚你的设备，一步步帮你装好，只在需要你插拔电源、在手机上点选时叫你：
 
-> 请阅读 https://github.com/yizhixiaoheigou/DashPlay/blob/main/skills/dashplay-install/SKILL.md ，按它一步步帮我把 DashPlay 装好。
+> 请在终端用 curl 下载 https://raw.githubusercontent.com/yizhixiaoheigou/DashPlay/main/skills/dashplay-install/SKILL.md 的原文并完整读完（不要用网页摘要工具，它可能给出旧版或删节版），再按它一步步帮我把 DashPlay 装好。
 
 > **这不是 Apple 认证产品。** 运行需要你自己提供配件认证身份，见 DashPlay 的说明。
 
