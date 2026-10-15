@@ -125,3 +125,42 @@ msgstr "网络提示"
 
 msgid "Network check unavailable (service starting or stopped)."
 msgstr "网络检查暂不可用（服务启动中或已停止）。"
+
+msgid "Car"
+msgstr "车"
+
+msgid "Network"
+msgstr "网络"
+
+msgid "Car internet"
+msgstr "车机上网"
+
+msgid "iPhone"
+msgstr "iPhone"
+
+msgid "Sound"
+msgstr "声音"
+
+msgid "Own address"
+msgstr "自己的网址"
+
+msgid "Diagnostics"
+msgstr "诊断"
+
+msgid "Tesla offline checks"
+msgstr "特斯拉离线联网检查"
+
+msgid "Automatic (recommended)"
+msgstr "自动（推荐）"
+
+msgid "Enable only without upstream"
+msgstr "仅无上游时启用"
+
+msgid "Off (use upstream)"
+msgstr "关闭（使用上游）"
+
+msgid "Download diagnostics from the DashPlay settings page. Changes take about one minute and interrupt CarPlay briefly."
+msgstr "在 DashPlay 设置页下载诊断记录。修改后约 1 分钟生效，期间 CarPlay 会断一下。"
+
+msgid "Without a working SIM uplink, answer Tesla connectivity checks so it accepts this Wi-Fi. Tesla music and maps then have no internet; CarPlay still works. To keep Tesla apps online, insert a working SIM. The current F50 driver cannot join a phone hotspot while keeping its own hotspot. Automatic probes the WAN path and restores the original DNS and DHCP when it returns. This release needs an in-car retest, including loss of SIM signal."
+msgstr "没有可用的 SIM 上网时，替特斯拉回答联网检查，让它接受此 WiFi。特斯拉自带音乐和地图不能联网，CarPlay 正常。要让车机上网，请插可上网的 SIM 卡；F50 当前驱动不能一边连手机热点一边开热点。自动模式探测上游，恢复后还原 DNS 和 DHCP。本轮正式功能待实车复测，包括有卡但没信号的情况。"

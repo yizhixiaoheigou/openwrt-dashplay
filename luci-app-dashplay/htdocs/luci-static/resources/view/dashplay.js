@@ -38,11 +38,16 @@ return view.extend({
 			_('CarPlay in the car\'s web browser. Set up Wi-Fi under Network → Wireless as usual; DashPlay hands one of these networks to the iPhone over Bluetooth, and the head unit opens the CarPlay page on the same network.'));
 
 		s = m.section(form.NamedSection, 'main', 'dashplay');
-		s.tab('general', _('General'));
-		// Name, certificate and public address together, each saying which problem it solves (2026-10-13).
-		s.tab('reach', _('When the head unit cannot open the page'));
+		s.tab('car', _('Car'));
+		s.tab('network', _('Network'));
+		s.tab('internet', _('Car internet'));
+		s.tab('iphone', _('iPhone'));
+		s.tab('sound', _('Sound'));
+		s.tab('reach', _('Own address'));
+		s.tab('debug', _('Diagnostics'));
 
-		o = s.taboption('general', form.DummyValue, '_status', _('Status'));
+
+		o = s.taboption('car', form.DummyValue, '_status', _('Status'));
 		o.rawhtml = true;
 		o.cfgvalue = function() {
 			return running(data[0])
@@ -50,12 +55,12 @@ return view.extend({
 				: '<b style="color:red">' + _('Not running') + '</b>';
 		};
 
-		o = s.taboption('general', form.DummyValue, '_network_warning', _('Network warning'));
+		o = s.taboption('network', form.DummyValue, '_network_warning', _('Network warning'));
 		o.renderWidget = function() {
 			return E('div', { 'id': 'dashplay-network-warning', 'role': 'status', 'style': 'color:#b45309' });
 		};
 
-		o = s.taboption('general', form.DummyValue, '_links', _('Open'));
+		o = s.taboption('iphone', form.DummyValue, '_links', _('Open'));
 		o.rawhtml = true;
 		o.cfgvalue = function() {
 			return '<a class="btn cbi-button" target="_blank" href="http://' + host + ':' + port + '/">' +
@@ -64,10 +69,10 @@ return view.extend({
 				_('CarPlay screen') + '</a>';
 		};
 
-		o = s.taboption('general', form.Flag, 'enabled', _('Enable'));
+		o = s.taboption('network', form.Flag, 'enabled', _('Enable'));
 		o.rmempty = false;
 
-		o = s.taboption('general', form.ListValue, 'wifi', _('Wi-Fi handed to the iPhone'),
+		o = s.taboption('network', form.ListValue, 'wifi', _('Wi-Fi handed to the iPhone'),
 			_('The iPhone joins this network for wireless CarPlay. The router\'s own access point works best; a network the router joins as a client must be in a firewall zone that accepts input.'));
 		o.value('auto', _('Automatic (first access point, 5 GHz first)'));
 		uci.sections('wireless', 'wifi-iface', function(section) {
@@ -79,29 +84,39 @@ return view.extend({
 		// A Tesla's browser refuses LAN addresses and hands the steering wheel to the car's own media only (2026-10-14):
 		// one switch for all of it, the LAN move of shared_lan, music, calls and Siri left to the car's Bluetooth,
 		// and the Tesla browser's fullscreen.
-		o = s.taboption('general', form.Flag, 'tesla_mode', _('Tesla mode'),
+		o = s.taboption('car', form.Flag, 'tesla_mode', _('Tesla mode'),
 			_('For a Tesla. The router\'s Wi-Fi network moves to %s, which the Tesla browser opens (it refuses LAN addresses such as 192.168.x.x); music, calls and Siri are left to the car (both switches below, turned on); the fullscreen button works in the Tesla browser. Pair the iPhone with the Tesla over Bluetooth and pick it as the media source. In the Tesla\'s Wi-Fi settings turn on "Remain connected in Drive", else the picture stops out of Park. Afterwards open this admin page at %s and reconnect the car and phones to the Wi-Fi. Turning it off puts the previous address back.').format('100.96.0.1', 'http://100.96.0.1/'));
 		o.rmempty = false;
 		o.default = '0';
 
 		// The same for any car whose own Bluetooth is paired with the iPhone; Tesla mode turns both on.
-		o = s.taboption('general', form.Flag, 'car_music', _('Music over the car\'s Bluetooth'),
+		o = s.taboption('sound', form.Flag, 'car_music', _('Music over the car\'s Bluetooth'),
 			_('Pair the iPhone with the car over Bluetooth and pick it as the media source: the steering wheel, media card and volume then work as with any phone. The CarPlay page shows the screen and plays navigation prompts, louder. If music ever comes without sound, choose the car as audio output in the iPhone\'s Control Center.'));
 		o.rmempty = false;
 		o.default = '0';
 		o.retain = true;
 		o.depends('tesla_mode', '0');
 
-		o = s.taboption('general', form.Flag, 'car_voice', _('Calls and Siri over the car\'s Bluetooth'),
+		o = s.taboption('sound', form.Flag, 'car_voice', _('Calls and Siri over the car\'s Bluetooth'),
 			_('Calls and Siri use the car\'s own microphone and speakers through its Bluetooth (the iPhone must be paired with the car), not the CarPlay page. Worth a try when calls through the page echo.'));
 		o.rmempty = false;
 		o.default = '0';
 		o.retain = true;
 		o.depends('tesla_mode', '0');
 
-		o = s.taboption('general', form.Value, 'settings_port', _('Settings page port'));
+		o = s.taboption('network', form.Value, 'settings_port', _('Settings page port'));
 		o.datatype = 'port';
 		o.placeholder = '18080';
+
+		o = s.taboption('internet', form.ListValue, 'answer_tesla_checks', _('Tesla offline checks'),
+			_('Without a working SIM uplink, answer Tesla connectivity checks so it accepts this Wi-Fi. Tesla music and maps then have no internet; CarPlay still works. To keep Tesla apps online, insert a working SIM. The current F50 driver cannot join a phone hotspot while keeping its own hotspot. Automatic probes the WAN path and restores the original DNS and DHCP when it returns. This release needs an in-car retest, including loss of SIM signal.'));
+		o.value('auto', _('Automatic (recommended)'));
+		o.value('1', _('Enable only without upstream'));
+		o.value('0', _('Off (use upstream)'));
+		o.default = 'auto';
+		o.depends('tesla_mode', '1');
+		o = s.taboption('debug', form.DummyValue, '_debug', _('Diagnostics'));
+		o.cfgvalue = function() { return _('Download diagnostics from the DashPlay settings page. Changes take about one minute and interrupt CarPlay briefly.'); };
 
 		o = s.taboption('reach', form.DummyValue, '_reach', _('Usually not needed'));
 		o.rawhtml = true;
@@ -143,7 +158,7 @@ return view.extend({
 		o.password = true;
 
 		// A trade-off: a released iPhone stays cool near a router left on; a page opened later waits ~7 s.
-		o = s.taboption('general', form.Value, 'idle_release', _('Release the iPhone after (seconds)'),
+		o = s.taboption('iphone', form.Value, 'idle_release', _('Release the iPhone after (seconds)'),
 			_('Without any page showing the picture for this long, wireless CarPlay ends and the iPhone stops sending its screen; opening the page invites it again (about 7 s). 0: never end it.'));
 		o.datatype = 'uinteger';
 		o.placeholder = '300';
