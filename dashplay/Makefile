@@ -6,12 +6,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=dashplay
-PKG_VERSION:=2026.10.15.2
+PKG_VERSION:=2026.10.16
 PKG_RELEASE:=1
 PKG_LICENSE:=GPL-3.0-only
 PKG_SOURCE:=dashplay-bundle-$(PKG_VERSION).tar
 PKG_SOURCE_URL:=https://github.com/yizhixiaoheigou/DashPlay/releases/download/v$(PKG_VERSION)/
-PKG_HASH:=22f0e0fdf484d97ac84d682cc7f574bc2e4fe2b70141a0aa172d28c8a5d77be0
+PKG_HASH:=19d3a04a1447c4b301e977e65699c8f5c8e64d3606dd938bf21b364e2b1f430e
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -61,6 +61,9 @@ define Package/dashplay/postinst
 [ -n "$$IPKG_INSTROOT" ] && exit 0
 mkdir -p /opt/dashplay/state/receiver /opt/dashplay/identity/offline-mfi
 chmod 700 /opt/dashplay/state /opt/dashplay/state/receiver /opt/dashplay/identity /opt/dashplay/identity/offline-mfi
+# ZTE F50 (MU300 OpenWrt): the system's boot scripts, faster and without dropping CarPlay right after it came up
+# (mu300_boot.py; it changes only the exact originals, keeps them, and "mu300_boot.py revert" puts them back)
+if [ -d /opt/mu300 ]; then python3 /opt/dashplay/mu300_boot.py apply; fi
 /etc/init.d/dashplay enable
 /etc/init.d/dashplay restart
 exit 0
