@@ -121,4 +121,4 @@ GPL-3.0，见 [LICENSE](LICENSE) 与 [NOTICE.md](NOTICE.md)。CarPlay、iPhone�
 
 ## 升级现有设备
 
-按 [装机 skill 的“升级已装好的盒子”](https://github.com/yizhixiaoheigou/DashPlay/blob/main/skills/dashplay-install/SKILL.md) 先把程序、设置、配对与认证备份到电脑，再用 `apk add --upgrade --simulate --allow-untrusted /tmp/dashplay-upgrade/*.apk` 检查本次四个包，确认后去掉 `--simulate` 执行。不要卸载重装或覆盖 state/identity。F50 保留独立 BlueZ，出现内核/kmod 升级计划就停止。特斯拉模式运行中每 10 秒检查上游地址冲突，设置页和 LuCI 会显示警告；不会自动变更网络。
+按 [装机 skill 的“升级已装好的盒子”](https://github.com/yizhixiaoheigou/DashPlay/blob/main/skills/dashplay-install/SKILL.md) 先把程序、设置、配对与认证备份到电脑，再用 `apk update && apk add --upgrade --simulate --allow-untrusted /tmp/dashplay-upgrade/*.apk` 检查本次四个包（先 `apk update`，试运行才能看到联网时会一起升级的依赖），确认后去掉 `--simulate` 执行。不要卸载重装或覆盖 state/identity。F50 保留独立 BlueZ，出现内核/kmod 升级计划就停止。特斯拉模式运行中每 10 秒检查上游地址冲突，设置页和 LuCI 会显示警告；不会自动变更网络。
