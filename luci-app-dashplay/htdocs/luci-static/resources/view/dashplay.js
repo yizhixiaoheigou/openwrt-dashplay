@@ -4,7 +4,9 @@
 'require rpc';
 'require uci';
 'require fs';
+'require dom';
 'require poll';
+'require ui';
 
 // Network settings stay in OpenWrt; this page picks the Wi-Fi handed to the iPhone and links to the
 // DashPlay settings page (adding iPhones, certificate, diagnostics) and the CarPlay viewer.
@@ -44,6 +46,7 @@ return view.extend({
 		s.tab('iphone', _('iPhone'));
 		s.tab('sound', _('Sound'));
 		s.tab('reach', _('Own address'));
+		s.tab('update', _('Program update'));
 		s.tab('debug', _('Diagnostics'));
 
 
@@ -149,6 +152,21 @@ return view.extend({
 		o.value('0', _('Off (use upstream)'));
 		o.default = 'auto';
 		o.depends('tesla_mode', '1');
+		// Online update (update.py): the daily check and an update run apart from the service, by /usr/libexec/dashplay-update.
+		o = s.taboption('update', form.DummyValue, '_update', _('Program update'));
+		o.renderWidget = function() {
+			return E('div', { 'id': 'dashplay-update' }, _('Loading…'));
+		};
+
+		o = s.taboption('update', form.Flag, 'update_check', _('Check for a new version daily'),
+			_('Only shows that there is one; nothing is installed until you click "Update now". Before updating, the iPhones, certificates and settings are backed up; a version that does not start is replaced by the previous one.'));
+		o.rmempty = false;
+		o.default = '1';
+
+		o = s.taboption('update', form.Value, 'update_mirror', _('Download mirror'),
+			_('Tried when GitHub cannot be reached. Releases are signed, so a mirror cannot change what is installed. Empty: the built-in mirror; "none": GitHub only.'));
+		o.placeholder = 'https://ghfast.top/';
+
 		o = s.taboption('debug', form.DummyValue, '_debug', _('Diagnostics'));
 		o.cfgvalue = function() { return _('Download diagnostics from the DashPlay settings page. Changes take about one minute and interrupt CarPlay briefly.'); };
 
@@ -208,7 +226,65 @@ return view.extend({
 				});
 			}
 			poll.add(updateWarning, 10);
-			return updateWarning().then(function() { return node; });
+
+			var box = node.querySelector('#dashplay-update');
+			function readJson(path) {
+				return L.resolveDefault(fs.read(path), '').then(function(raw) {
+					try { return JSON.parse(raw) || {}; } catch (e) { return {}; }
+				});
+			}
+			function run(action) {
+				return fs.exec('/usr/libexec/dashplay-update', [ action ]).then(function(res) {
+					if (res.stdout && action == 'start')
+						ui.addNotification(null, E('p', res.stdout.trim()), 'info');
+					return updateProgram();
+				});
+			}
+			function line(title, text) {
+				return E('p', {}, [ E('strong', {}, title), text ? ' ' + text : '' ]);
+			}
+			function updateProgram() {
+				return Promise.all([
+					readJson('/opt/dashplay/state/update-check.json'),
+					readJson('/opt/dashplay/state/update-status.json')
+				]).then(function(data) {
+					var found = data[0], progress = data[1], now = Date.now() / 1000, items = [];
+					var busy = progress.phase && progress.phase != 'done' && progress.phase != 'failed' && now - progress.at < 1200;
+					if (busy) {
+						items.push(line(_('Updating:'), progress.message));
+						items.push(E('p', {}, _('About 2–5 minutes; CarPlay is interrupted meanwhile.')));
+						return dom.content(box, items);
+					}
+					if ((progress.phase == 'done' || progress.phase == 'failed') && now - progress.at < 86400)
+						items.push(line(progress.phase == 'done' ? _('Last update:') : _('Last update did not finish:'), progress.message));
+					if (found.error)
+						items.push(line(_('Checking for updates failed:'), found.error));
+					else if (found.available) {
+						items.push(line(_('New version %s').format(found.latest), _('(installed: %s)').format(found.current || _('an older version'))));
+						if (found.notes)
+							items.push(E('pre', { 'style': 'white-space:pre-wrap' }, found.notes));
+						if (!found.online)
+							items.push(E('p', {}, (found.reason ? found.reason + '：' : '') + _('This version changes the system: update with the firmware image as the installation guide describes.')));
+					}
+					else if (found.latest)
+						items.push(line(_('Up to date:'), found.latest));
+					var buttons = [ E('button', { 'class': 'btn cbi-button', 'click': ui.createHandlerFn(this, run, 'check') }, _('Check now')) ];
+					if (found.available && found.online && !found.error)
+						buttons.push(' ', E('button', {
+							'class': 'btn cbi-button cbi-button-action',
+							'click': ui.createHandlerFn(this, function() {
+								if (confirm(_('Update DashPlay now? CarPlay is interrupted for a few minutes.')))
+									return run('start');
+							})
+						}, _('Update now')));
+					items.push(E('p', {}, buttons));
+					if (found.checked_at)
+						items.push(E('p', { 'class': 'cbi-value-description' }, _('Last checked: %s').format(new Date(found.checked_at * 1000).toLocaleString())));
+					return dom.content(box, items);
+				});
+			}
+			poll.add(updateProgram, 5);
+			return Promise.all([ updateWarning(), updateProgram() ]).then(function() { return node; });
 		});
 	}
 });

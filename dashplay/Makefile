@@ -6,12 +6,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=dashplay
-PKG_VERSION:=2026.10.19.1
+PKG_VERSION:=2026.10.19.2
 PKG_RELEASE:=1
 PKG_LICENSE:=GPL-3.0-only
 PKG_SOURCE:=dashplay-bundle-$(PKG_VERSION).tar
 PKG_SOURCE_URL:=https://github.com/yizhixiaoheigou/DashPlay/releases/download/v$(PKG_VERSION)/
-PKG_HASH:=1fa3e694d0180341171dbbd972c50041ff31d849ea2e418eb37c65e15c234016
+PKG_HASH:=ce3054770e5aaef94fda933e1cc9ee9ef0451d45cbe0c8f5a078906477ea9c7f
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -49,10 +49,12 @@ endef
 # The Debian/Armbian pieces stay out; state/ and identity/ are created by postinst and never owned by
 # the package, so an upgrade or removal keeps pairings, certificates and the MFi identity.
 define Package/dashplay/install
-	$(INSTALL_DIR) $(1)/opt/dashplay $(1)/etc/init.d $(1)/etc/config
+	$(INSTALL_DIR) $(1)/opt/dashplay $(1)/etc/init.d $(1)/etc/config $(1)/usr/libexec
 	cd $(PKG_BUILD_DIR)/bundle && tar -cf - --exclude=./state --exclude=./identity --exclude=./firmware \
 		--exclude=./service.json --exclude=./dashplay.service --exclude=./supervisor.py . | tar -xf - -C $(1)/opt/dashplay
 	$(INSTALL_BIN) ./files/dashplay.init $(1)/etc/init.d/dashplay
+	# Online update: LuCI's check / start command (update.py launch runs the update as a procd service of its own).
+	$(INSTALL_BIN) ./files/dashplay-update $(1)/usr/libexec/dashplay-update
 	$(INSTALL_CONF) ./files/dashplay.config $(1)/etc/config/dashplay
 endef
 

@@ -17,13 +17,29 @@
       "file": {
         "/var/run/dashplay/network-status.json": [
           "read"
+        ],
+        "/opt/dashplay/state/update-check.json": [
+          "read"
+        ],
+        "/opt/dashplay/state/update-status.json": [
+          "read"
         ]
       }
     },
     "write": {
       "uci": [
         "dashplay"
-      ]
+      ],
+      "ubus": {
+        "file": [
+          "exec"
+        ]
+      },
+      "file": {
+        "/usr/libexec/dashplay-update": [
+          "exec"
+        ]
+      }
     }
   }
 }

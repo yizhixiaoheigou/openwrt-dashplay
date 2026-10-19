@@ -200,3 +200,63 @@ msgstr "在 DashPlay 设置页下载诊断记录。修改后约 1 分钟生效�
 
 msgid "Without a working SIM uplink, answer Tesla connectivity checks so it accepts this Wi-Fi. Tesla music and maps then have no internet; CarPlay still works. To keep Tesla apps online, insert a working SIM. The current F50 driver cannot join a phone hotspot while keeping its own hotspot. Automatic probes the WAN path and restores the original DNS and DHCP when it returns. This release needs an in-car retest, including loss of SIM signal."
 msgstr "没有可用的 SIM 上网时，替特斯拉回答联网检查，让它接受此 WiFi。特斯拉自带音乐和地图不能联网，CarPlay 正常。要让车机上网，请插可上网的 SIM 卡；F50 当前驱动不能一边连手机热点一边开热点。自动模式探测上游，恢复后还原 DNS 和 DHCP。本轮正式功能待实车复测，包括有卡但没信号的情况。"
+
+msgid "Program update"
+msgstr "程序更新"
+
+msgid "Loading…"
+msgstr "正在读取…"
+
+msgid "Check for a new version daily"
+msgstr "每天检查新版本"
+
+msgid "Only shows that there is one; nothing is installed until you click \"Update now\". Before updating, the iPhones, certificates and settings are backed up; a version that does not start is replaced by the previous one."
+msgstr "只提示有新版本，点「立即升级」才会安装。升级前会备份 iPhone、证书和设置；新版本起不来会自动退回原来的版本。"
+
+msgid "Download mirror"
+msgstr "下载镜像"
+
+msgid "Tried when GitHub cannot be reached. Releases are signed, so a mirror cannot change what is installed. Empty: the built-in mirror; \"none\": GitHub only."
+msgstr "连不上 GitHub 时改用这个地址前缀下载。发布带签名，镜像改不了装进来的内容。留空用内置的镜像；填 none 只用 GitHub。"
+
+msgid "Updating:"
+msgstr "正在升级："
+
+msgid "About 2–5 minutes; CarPlay is interrupted meanwhile."
+msgstr "约 2–5 分钟，期间 CarPlay 会断开。"
+
+msgid "Last update:"
+msgstr "上次升级："
+
+msgid "Last update did not finish:"
+msgstr "上次升级没有完成："
+
+msgid "Checking for updates failed:"
+msgstr "检查更新没有成功："
+
+msgid "New version %s"
+msgstr "有新版本 %s"
+
+msgid "(installed: %s)"
+msgstr "（当前 %s）"
+
+msgid "an older version"
+msgstr "较旧版本"
+
+msgid "This version changes the system: update with the firmware image as the installation guide describes."
+msgstr "这一版改了系统，不能在线升级：请按装机说明用刷机包升级。"
+
+msgid "Up to date:"
+msgstr "已是最新："
+
+msgid "Check now"
+msgstr "立即检查"
+
+msgid "Update DashPlay now? CarPlay is interrupted for a few minutes."
+msgstr "现在升级 DashPlay？CarPlay 会断开几分钟。"
+
+msgid "Update now"
+msgstr "立即升级"
+
+msgid "Last checked: %s"
+msgstr "上次检查：%s"

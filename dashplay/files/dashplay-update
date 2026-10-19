@@ -1,0 +1,8 @@
+#!/bin/sh
+# LuCI's way to DashPlay's online update (its rpcd ACL allows only this command): check for a release, or start
+# an update apart from the dashplay service (update.py launch).
+case "$1" in
+	check) exec /usr/bin/python3 /opt/dashplay/update.py check --root /opt/dashplay ;;
+	start) exec /usr/bin/python3 /opt/dashplay/update.py launch --root /opt/dashplay ;;
+	*) echo "usage: $0 check|start" >&2; exit 2 ;;
+esac

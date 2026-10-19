@@ -121,4 +121,8 @@ GPL-3.0，见 [LICENSE](LICENSE) 与 [NOTICE.md](NOTICE.md)。CarPlay、iPhone�
 
 ## 升级现有设备
 
+**网页一键升级**（装了带「程序更新」的版本之后）：后台「服务 → DashPlay → 程序更新」，或 DashPlay 设置页最下面的「程序更新」。DashPlay 每天检查一次，有新版本只提示、不自动装；点「立即升级」后，它从 GitHub（连不上时换镜像）下载签名核对过的正式版，CarPlay 使用中不升级，升级前备份配对、证书和设置，计划里出现内核、内核模块或系统蓝牙就停，新版本起不来就装回原来的版本。每天检查可在同一页关掉，镜像地址也在那里改（`uci set dashplay.main.update_check=0`、`update_mirror`）。
+
+更早的版本还没有这一栏，按下面手动升级一次：
+
 按 [装机 skill 的“升级已装好的盒子”](https://github.com/yizhixiaoheigou/DashPlay/blob/main/skills/dashplay-install/SKILL.md) 先把程序、设置、配对与认证备份到电脑，再用 `apk update && apk add --upgrade --simulate --allow-untrusted /tmp/dashplay-upgrade/*.apk` 检查本次四个包（先 `apk update`，试运行才能看到联网时会一起升级的依赖），确认后去掉 `--simulate` 执行。不要卸载重装或覆盖 state/identity。F50 保留独立 BlueZ，出现内核/kmod 升级计划就停止。特斯拉模式运行中每 10 秒检查上游地址冲突，设置页和 LuCI 会显示警告；不会自动变更网络。
