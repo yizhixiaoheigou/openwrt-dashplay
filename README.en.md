@@ -65,6 +65,13 @@ When the Wi-Fi name, password or channel changes in the admin, DashPlay follows 
 
 **When the router joins the car hotspot or a portable Wi-Fi as a client**: the head unit does not use the router's DNS, so use `https://<router's address on that network>:18443/`; and that network must be in a firewall zone that accepts input (the default wan zone rejects the iPhone's connections; the settings page warns about it).
 
+**Another router's Wi-Fi (optional)**: for phones and the head unit on a travel router with better radios (GL.iNet, Cudy and the like) while DashPlay stays on this router (a ZTE F50 giving 4G and DashPlay, say):
+1. Set the travel router up as an **access point bridged into this router's LAN**: its link to this router (a cable port, or the USB tethering interface it gets from the F50's USB port, cdc_ncm) and its Wi-Fi in one bridge, its own DHCP off, so that phones and the head unit get their addresses here. Give its Wi-Fi a **fixed channel**.
+2. In "Services → DashPlay" on this router, choose "Another router's Wi-Fi" as the Wi-Fi handed to the iPhone and enter its name, password type, password and **the channel it actually uses** (see its status page or a phone's Wi-Fi details; some routers move the primary channel, 36 became 40 in a test); "bridged into network" is usually `lan`.
+3. The head unit joins the travel router's Wi-Fi and opens `https://dashplay.lan:18443/` as usual.
+
+When that Wi-Fi's name, password or channel changes, change it here too. After Tesla mode moves the network, devices on the travel router must rejoin its Wi-Fi by hand. Tried on 2026-10-19 with a OneCloud standing in for the travel router (the F50's USB port in the OneCloud, its USB Wi-Fi adapter bridged as the access point): the iPhone joined and showed the picture, about 90 ms behind, no dropped frames. Commands: `uci set dashplay.main.wifi=external`, then `external_ssid`, `external_key`, `external_security` (wpa2/wpa3/open) and `external_channel`, and `uci commit dashplay && /etc/init.d/dashplay restart`.
+
 When the head unit's browser cannot open the page or blocks the certificate, see section 4 of the [AI install notes (Chinese)](https://github.com/yizhixiaoheigou/DashPlay/blob/main/docs/DashPlay-AI安装说明.md).
 
 **Calls and Siri** use the head unit's microphone through the browser and play on its media channel (not the headrest speakers); the other side may hear its own echo. While the iPhone is also on the car's own Bluetooth, the car takes the call and the microphone and the other side hears nothing: disconnect the iPhone from the car's own Bluetooth to call over CarPlay. An app of the head unit playing sound pauses the iPhone; press play once on the steering wheel or the media card to go on.

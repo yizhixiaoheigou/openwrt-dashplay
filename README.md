@@ -65,6 +65,13 @@ WiFi 名称、密码或信道在后台改了以后，DashPlay 会自动跟着改
 
 **路由器作为客户端连车机热点或随身 WiFi 时**：车机不经过路由器的 DNS，只能用 `https://路由器在那个网络里的地址:18443/`；而且那个网络要放进允许入站的防火墙区域（默认的 wan 区域会拒绝 iPhone 的连接，设置页会提示）。
 
+**用另一台路由器的 WiFi（可选）**：想让手机和车机连一台无线更好的便携路由器（GL.iNet、Cudy 等），而 DashPlay 仍装在本机（比如 F50 提供 4G 和 DashPlay）时：
+1. 便携路由器设成**桥接进本机局域网的无线接入点**：它连本机的那一路（网线口，或插 F50 USB 得到的 USB 共享网卡，F50 上是 cdc_ncm）和它的 WiFi 放进同一个桥，关掉它自己的 DHCP，让手机和车机从本机拿地址。WiFi 设成**固定信道**。
+2. 本机后台「服务 → DashPlay」的「交给 iPhone 的 WiFi」选「另一台路由器的 WiFi」，填它的 WiFi 名称、加密方式、密码和**实际在用的信道**（到它的状态页或手机的 WiFi 详情里看；有的路由器会自动换主信道，实测设 36 变成了 40）；「桥接进的网络」一般是 `lan`。
+3. 车机连便携路由器的 WiFi，照常打开 `https://dashplay.lan:18443/`。
+
+便携路由器的 WiFi 名称、密码或信道改了，要在这里同步改。特斯拉模式改网段后，连在便携路由器上的设备要手动重连一次 WiFi。2026-10-19 用玩客云模拟便携路由器实测通过（F50 的 USB 插玩客云，玩客云的 USB 无线网卡桥接发热点）：iPhone 连上并出画面，延迟约 90 ms、不丢帧。命令：`uci set dashplay.main.wifi=external`，再设 `external_ssid`、`external_key`、`external_security`（wpa2/wpa3/open）、`external_channel`，`uci commit dashplay && /etc/init.d/dashplay restart`。
+
 车机浏览器打不开或拦截证书时，见 [AI 安装说明](https://github.com/yizhixiaoheigou/DashPlay/blob/main/docs/DashPlay-AI安装说明.md) 第 4 节「车机浏览器打不开时」。
 
 **打电话和 Siri**：用车机的麦克风（经浏览器），从车机的媒体声道出声（不是头枕喇叭）；对方可能听到自己的回声。iPhone 同时连着车机自带蓝牙时，车机自己也进入通话、占住麦克风，对方听不到你：用 CarPlay 打电话时请断开 iPhone 与车机自带蓝牙。车机自己的应用放声音会让 iPhone 暂停，回来后按一次方向盘或音乐卡片的播放键即可继续。

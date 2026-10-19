@@ -80,6 +80,40 @@ return view.extend({
 				o.value(section['.name'], '%s (%s)'.format(section.ssid || section['.name'],
 					section.mode === 'ap' ? _('access point') : _('client')));
 		});
+		o.value('external', _('Another router\'s Wi-Fi (enter below)'));
+
+		// A travel router with better radios, its uplink this router over USB or a cable (issue #2, 2026-10-19): its
+		// Wi-Fi is not in /etc/config/wireless, so it is entered here and handed over as entered.
+		o = s.taboption('network', form.Value, 'external_ssid', _('Other router: Wi-Fi name'),
+			_('Set the other router up as an access point bridged into this router\'s LAN (no DHCP of its own, its LAN port or USB tethering in the bridge), so that phones and the head unit get their addresses from this router. Give its Wi-Fi a fixed channel.'));
+		o.depends('wifi', 'external');
+		o.datatype = 'maxlength(32)';
+		o.rmempty = false;
+
+		o = s.taboption('network', form.ListValue, 'external_security', _('Other router: password type'));
+		o.value('wpa2', _('WPA2 personal (also WPA2/WPA3 mixed)'));
+		o.value('wpa3', _('WPA3 personal only'));
+		o.value('open', _('None (open)'));
+		o.default = 'wpa2';
+		o.depends('wifi', 'external');
+
+		o = s.taboption('network', form.Value, 'external_key', _('Other router: Wi-Fi password'));
+		o.password = true;
+		o.datatype = 'wpakey';
+		o.depends({ wifi: 'external', external_security: 'wpa2' });
+		o.depends({ wifi: 'external', external_security: 'wpa3' });
+
+		o = s.taboption('network', form.Value, 'external_channel', _('Other router: Wi-Fi channel'),
+			_('The channel the other router actually uses, e.g. 149 or 6. Set a fixed one there, then check its status page or a phone\'s Wi-Fi details: some routers move the primary channel within the band (36 became 40 in a test). The iPhone is told this channel.'));
+		o.datatype = 'range(1,196)';
+		o.depends('wifi', 'external');
+		o.rmempty = false;
+
+		o = s.taboption('network', form.Value, 'external_network', _('Other router: bridged into network'),
+			_('The interface of this router the other router is bridged into; DashPlay serves the CarPlay page on its address.'));
+		o.datatype = 'uciname';
+		o.placeholder = 'lan';
+		o.depends('wifi', 'external');
 
 		// A Tesla's browser refuses LAN addresses and hands the steering wheel to the car's own media only (2026-10-14):
 		// one switch for all of it, the LAN move of shared_lan, music, calls and Siri left to the car's Bluetooth,

@@ -45,6 +45,42 @@ msgstr "热点"
 msgid "client"
 msgstr "客户端"
 
+msgid "Another router's Wi-Fi (enter below)"
+msgstr "另一台路由器的 WiFi（在下面填写）"
+
+msgid "Other router: Wi-Fi name"
+msgstr "另一台路由器：WiFi 名称"
+
+msgid "Set the other router up as an access point bridged into this router's LAN (no DHCP of its own, its LAN port or USB tethering in the bridge), so that phones and the head unit get their addresses from this router. Give its Wi-Fi a fixed channel."
+msgstr "把另一台路由器设成桥接进本路由器局域网的无线接入点（关掉它自己的 DHCP，把它连本机的网口或 USB 共享网卡放进桥里），让手机和车机从本路由器拿地址。它的 WiFi 要设成固定信道。"
+
+msgid "Other router: password type"
+msgstr "另一台路由器：加密方式"
+
+msgid "WPA2 personal (also WPA2/WPA3 mixed)"
+msgstr "WPA2 个人（WPA2/WPA3 混合也选这个）"
+
+msgid "WPA3 personal only"
+msgstr "仅 WPA3 个人"
+
+msgid "None (open)"
+msgstr "不加密"
+
+msgid "Other router: Wi-Fi password"
+msgstr "另一台路由器：WiFi 密码"
+
+msgid "Other router: Wi-Fi channel"
+msgstr "另一台路由器：WiFi 信道"
+
+msgid "The channel the other router actually uses, e.g. 149 or 6. Set a fixed one there, then check its status page or a phone's Wi-Fi details: some routers move the primary channel within the band (36 became 40 in a test). The iPhone is told this channel."
+msgstr "另一台路由器实际在用的信道，例如 149 或 6。先在那边设成固定信道，再到它的状态页或手机的 WiFi 详情里看实际信道：有的路由器会在频段内换主信道（实测设 36 变成了 40）。会告诉 iPhone 这个信道。"
+
+msgid "Other router: bridged into network"
+msgstr "另一台路由器：桥接进的网络"
+
+msgid "The interface of this router the other router is bridged into; DashPlay serves the CarPlay page on its address."
+msgstr "另一台路由器桥接进本路由器的哪个接口；DashPlay 在这个接口的地址上提供 CarPlay 画面。"
+
 msgid "Settings page port"
 msgstr "设置页端口"
 
