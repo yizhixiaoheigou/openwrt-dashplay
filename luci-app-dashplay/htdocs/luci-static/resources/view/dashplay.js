@@ -255,7 +255,10 @@ return view.extend({
 						items.push(E('p', {}, _('About 2–5 minutes; CarPlay is interrupted meanwhile.')));
 						return dom.content(box, items);
 					}
-					if ((progress.phase == 'done' || progress.phase == 'failed') && now - progress.at < 86400)
+					// A failure no longer matters once a later check finds the router up to date (updated by hand, say).
+					var settled = progress.phase == 'failed' && found.latest && !found.available && !found.error
+						&& found.checked_at > progress.at;
+					if ((progress.phase == 'done' || progress.phase == 'failed') && now - progress.at < 86400 && !settled)
 						items.push(line(progress.phase == 'done' ? _('Last update:') : _('Last update did not finish:'), progress.message));
 					if (found.error)
 						items.push(line(_('Checking for updates failed:'), found.error));
