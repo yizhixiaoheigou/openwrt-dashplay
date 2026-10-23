@@ -6,12 +6,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=dashplay
-PKG_VERSION:=2026.10.20
+PKG_VERSION:=2026.10.23
 PKG_RELEASE:=1
 PKG_LICENSE:=GPL-3.0-only
 PKG_SOURCE:=dashplay-bundle-$(PKG_VERSION).tar
 PKG_SOURCE_URL:=https://github.com/yizhixiaoheigou/DashPlay/releases/download/v$(PKG_VERSION)/
-PKG_HASH:=aa1a2e423017ae72b288265a6eb43e204cc1e64f0db29517adef123b0518a269
+PKG_HASH:=3156b3941a8dcb9a66bf12d72bf9fddc8ae47d1028f07a2c5973430b0e129859
 
 include $(INCLUDE_DIR)/package.mk
 
