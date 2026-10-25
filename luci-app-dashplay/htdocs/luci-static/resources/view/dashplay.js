@@ -34,6 +34,7 @@ return view.extend({
 	render: function(data) {
 		var host = window.location.hostname;
 		var port = uci.get('dashplay', 'main', 'settings_port') || '18080';
+		var viewer = uci.get('dashplay', 'main', 'viewer_port') || '18443';
 		var m, s, o;
 
 		m = new form.Map('dashplay', _('DashPlay'),
@@ -68,7 +69,7 @@ return view.extend({
 		o.cfgvalue = function() {
 			return '<a class="btn cbi-button" target="_blank" href="http://' + host + ':' + port + '/">' +
 				_('DashPlay settings (add iPhone)') + '</a> ' +
-				'<a class="btn cbi-button" target="_blank" href="https://' + host + ':18443/">' +
+				'<a class="btn cbi-button" target="_blank" href="https://' + host + ':' + viewer + '/">' +
 				_('CarPlay screen') + '</a>';
 		};
 
@@ -145,11 +146,16 @@ return view.extend({
 		o.datatype = 'port';
 		o.placeholder = '18080';
 
+		o = s.taboption('network', form.Value, 'viewer_port', _('CarPlay screen port'));
+		o.datatype = 'port';
+		o.placeholder = '18443';
+		o.description = _('The HTTPS port of the CarPlay page. Empty is 18443, or the port an older install saved; a change takes about a minute and interrupts CarPlay briefly. It must differ from the settings page port, 80, 443 and 7000.');
+
 		o = s.taboption('internet', form.ListValue, 'answer_tesla_checks', _('Tesla offline checks'),
-			_('Without a working SIM uplink, answer Tesla connectivity checks so it accepts this Wi-Fi. Tesla music and maps then have no internet; CarPlay still works. To keep Tesla apps online, insert a working SIM. The current F50 driver cannot join a phone hotspot while keeping its own hotspot. Automatic probes the WAN path and restores the original DNS and DHCP when it returns. This release needs an in-car retest, including loss of SIM signal.'));
-		o.value('auto', _('Automatic (recommended)'));
-		o.value('1', _('Enable only without upstream'));
-		o.value('0', _('Off (use upstream)'));
+			_('The LAN stays online for the whole Tesla mode: the Tesla joins and opens CarPlay even without a SIM signal (cold start, basement). Only the upstream (Tesla music/maps) comes and goes; the CarPlay page never reconnects. Automatic is recommended; Always answer also hides the real checks when the upstream works; Real network only means the Tesla will not join without an upstream.'));
+		o.value('auto', _('Automatic (recommended): LAN always online, upstream switches by itself'));
+		o.value('1', _('Always answer (even with upstream)'));
+		o.value('0', _('Real network only (no join without upstream)'));
 		o.default = 'auto';
 		o.depends('tesla_mode', '1');
 		// Online update (update.py): the daily check and an update run apart from the service, by /usr/libexec/dashplay-update.
