@@ -6,12 +6,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=dashplay
-PKG_VERSION:=2026.10.29
+PKG_VERSION:=2026.10.31.3
 PKG_RELEASE:=1
 PKG_LICENSE:=GPL-3.0-only
 PKG_SOURCE:=dashplay-bundle-$(PKG_VERSION).tar
 PKG_SOURCE_URL:=https://github.com/yizhixiaoheigou/DashPlay/releases/download/v$(PKG_VERSION)/
-PKG_HASH:=270f858613d1d6a791f6158c92e6cff43777a1f9189560341602b6233ac6ec6e
+PKG_HASH:=3286a6e2e2c6b74431bd9f8852ebb450762d562e2fdf9d3c98cfbe1d34e7f3ad
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -66,6 +66,23 @@ chmod 700 /opt/dashplay/state /opt/dashplay/state/receiver /opt/dashplay/identit
 # ZTE F50 (MU300 OpenWrt): the system's boot scripts, faster and without dropping CarPlay right after it came up
 # (mu300_boot.py; it changes only the exact originals, keeps them, and "mu300_boot.py revert" puts them back)
 if [ -d /opt/mu300 ]; then python3 /opt/dashplay/mu300_boot.py apply; fi
+# Tesla mode forced both car-Bluetooth switches on until 2026-10-28, so a 0/0 beside it was the shipped default, not
+# the owner's choice. Keep the sound where it was once (the switches themselves take over afterwards); a fresh
+# install already ships car_audio_split.
+if [ -z "$$(uci -q get dashplay.main.car_audio_split)" ]; then
+	if [ "$$(uci -q get dashplay.main.tesla_mode)" = "1" ]; then
+		uci -q set dashplay.main.car_music='1'
+		uci -q set dashplay.main.car_voice='1'
+	fi
+	uci -q set dashplay.main.car_audio_split='1'
+	uci -q commit dashplay
+fi
+# Tesla mode moves the LAN by itself, and LuCI hides shared_lan while it is on (2026-10-29). Both on from before
+# would keep 100.96.0.1 after Tesla mode is turned off, with the switch to undo it hidden: clear it once.
+if [ "$$(uci -q get dashplay.main.tesla_mode)" = "1" ] && [ "$$(uci -q get dashplay.main.shared_lan)" = "1" ]; then
+	uci -q set dashplay.main.shared_lan='0'
+	uci -q commit dashplay
+fi
 /etc/init.d/dashplay enable
 /etc/init.d/dashplay restart
 exit 0

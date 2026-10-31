@@ -84,6 +84,12 @@ msgstr "另一台路由器桥接进本路由器的哪个接口；DashPlay 在这
 msgid "Settings page port"
 msgstr "设置页端口"
 
+msgid "CarPlay screen port"
+msgstr "CarPlay 画面端口"
+
+msgid "The HTTPS port of the CarPlay page. Empty is 18443, or the port an older install saved; a change takes about a minute and interrupts CarPlay briefly. It must differ from the settings page port, 80, 443 and 7000."
+msgstr "CarPlay 画面页的 HTTPS 端口。留空为 18443，或沿用旧版本保存的端口；修改后约 1 分钟生效，期间 CarPlay 会断一下。不能与设置页端口、80、443 和 7000 相同。"
+
 msgid "Address name"
 msgstr "访问名称"
 
@@ -120,29 +126,23 @@ msgstr "只在车机浏览器拦截证书警告、没有「继续访问」时需
 msgid "DuckDNS token"
 msgstr "DuckDNS token"
 
-msgid "General"
-msgstr "常规"
-
-msgid "When the head unit cannot open the page"
-msgstr "车机打不开画面时"
-
 msgid "Usually not needed"
 msgstr "一般用不到"
 
-msgid "Try in this order: 1. The head unit warns that the certificate is not trusted: tap continue. 2. It offers no way to continue: install the DashPlay CA certificate on the head unit (DashPlay settings page, \"Download the box CA certificate\"), or, when it cannot install one, set an own name below. 3. It refuses to open a LAN address such as 192.168.x.x, even by name (Tesla does): turn on \"Head unit refuses every LAN address\" below, or, when the router and the head unit have IPv6, set \"Public IPv6 address for the name\" to \"Also\"."
-msgstr "按顺序试：① 车机提示证书不安全：点「继续访问」即可。② 没有「继续访问」：在车机上装 DashPlay 的 CA 证书（DashPlay 设置页「下载盒子 CA 证书」）；车机不让装，就在下面设置「自己的域名」。③ 车机不让打开 192.168.x.x 这类局域网地址（用名称也不行，特斯拉就是这样）：勾选下面的「车机不让开任何局域网地址」；或者在路由器和车机都有 IPv6 时，把「访问名称指向公网 IPv6」选为「同时」。"
+msgid "Try in this order: 1. The head unit warns that the certificate is not trusted: tap continue. 2. It offers no way to continue: install the DashPlay CA certificate on the head unit (DashPlay settings page, \"Download the box CA certificate\"), or, when it cannot install one, set an own name below. 3. It refuses to open a LAN address such as 192.168.x.x, even by name: for a Tesla turn on \"Tesla mode\" on the Car tab; for another head unit turn on \"Head unit refuses every LAN address\" below, or, when the router and the head unit have IPv6, set \"Public IPv6 address for the name\" to \"Also\"."
+msgstr "按顺序试：① 车机提示证书不安全：点「继续访问」即可。② 没有「继续访问」：在车机上装 DashPlay 的 CA 证书（DashPlay 设置页「下载盒子 CA 证书」）；车机不让装，就在下面设置「自己的域名」。③ 车机不让打开 192.168.x.x 这类局域网地址（用名称也不行）：特斯拉在「车」标签打开「特斯拉模式」；其他车机勾选下面的「车机不让开任何局域网地址」；或者在路由器和车机都有 IPv6 时，把「访问名称指向公网 IPv6」选为「同时」。"
 
-msgid "Head unit refuses every LAN address (e.g. Tesla)"
-msgstr "车机不让开任何局域网地址（如特斯拉）"
+msgid "Head unit refuses every LAN address"
+msgstr "车机不让开任何局域网地址"
 
-msgid "Tesla's browser opens no LAN address such as 192.168.x.x, not even by name. Turned on, the router's own Wi-Fi network moves to %s (devices get 100.96.0.x): that range is not a private one, so such browsers open it, and the address name and own name follow. Afterwards open this admin page at %s and reconnect the head unit and phones to the Wi-Fi. Turning it off puts the previous address back."
-msgstr "特斯拉的浏览器不让打开 192.168.x.x 这类局域网地址，用名称也不行。勾选后，路由器自己 WiFi 的网段改成 %s（设备拿到 100.96.0.x）：这段地址不算局域网地址，这类浏览器就能打开；访问名称和自己的域名会自动跟着改。改完请用 %s 打开本后台，车机和手机重新连一次 WiFi。取消勾选会改回原来的地址。"
+msgid "For a head unit other than a Tesla whose browser opens no LAN address such as 192.168.x.x, not even by name (Tesla mode on the Car tab already does this, so this is hidden while it is on). Turned on, the router's own Wi-Fi network moves to %s (devices get 100.96.0.x): that range is not a private one, so such browsers open it, and the address name and own name follow. Afterwards open this admin page at %s and reconnect the head unit and phones to the Wi-Fi. Turning it off puts the previous address back."
+msgstr "用于特斯拉以外、浏览器不让打开 192.168.x.x 这类局域网地址（用名称也不行）的车机（特斯拉在「车」标签打开「特斯拉模式」就已包含这一项，打开时这里会隐藏）。勾选后，路由器自己 WiFi 的网段改成 %s（设备拿到 100.96.0.x）：这段地址不算局域网地址，这类浏览器就能打开；访问名称和自己的域名会自动跟着改。改完请用 %s 打开本后台，车机和手机重新连一次 WiFi。取消勾选会改回原来的地址。"
 
 msgid "Tesla mode"
 msgstr "特斯拉模式"
 
-msgid "For a Tesla. The router's Wi-Fi network moves to %s, which the Tesla browser opens (it refuses LAN addresses such as 192.168.x.x); music, calls and Siri are left to the car (both switches below, turned on); the fullscreen button works in the Tesla browser. Pair the iPhone with the Tesla over Bluetooth and pick it as the media source. In the Tesla's Wi-Fi settings turn on \"Remain connected in Drive\", else the picture stops out of Park. Afterwards open this admin page at %s and reconnect the car and phones to the Wi-Fi. Turning it off puts the previous address back."
-msgstr "给特斯拉用。路由器 WiFi 的网段改成 %s，特斯拉浏览器才能打开（它不让开 192.168.x.x 这类局域网地址）；音乐、通话和 Siri 交给车（相当于勾上下面两项）；全屏按钮在特斯拉浏览器里可用。iPhone 用蓝牙连特斯拉，并在特斯拉里把媒体来源选成这部 iPhone。在特斯拉的 WiFi 设置里打开「行驶中保持连接」，否则出 P 挡画面就停。改完请用 %s 打开本后台，车和手机重新连一次 WiFi。取消勾选会改回原来的地址。"
+msgid "For a Tesla. The router's Wi-Fi network moves to %s, which the Tesla browser opens (it refuses LAN addresses such as 192.168.x.x); turning it on also turns on the two Bluetooth switches on the Sound tab once (music, calls and Siri to the car; turning Music off makes the page the media source again, which the car may fight for); the fullscreen button works in the Tesla browser. Pair the iPhone with the Tesla over Bluetooth and pick it as the media source. In the Tesla's Wi-Fi settings turn on \"Remain connected in Drive\", else the picture stops out of Park. Afterwards open this admin page at %s and reconnect the car and phones to the Wi-Fi. Turning it off puts the previous address back."
+msgstr "给特斯拉用。路由器 WiFi 的网段改成 %s，特斯拉浏览器才能打开（它不让开 192.168.x.x 这类局域网地址）；打开它时会一次性勾上「声音」里的两项蓝牙开关（音乐、通话和 Siri 交给车）；之后仍可在「声音」里单独关——关掉音乐后网页会重新当媒体源，车机可能和它抢媒体卡片；全屏按钮在特斯拉浏览器里可用。iPhone 用蓝牙连特斯拉，并在特斯拉里把媒体来源选成这部 iPhone。在特斯拉的 WiFi 设置里打开「行驶中保持连接」，否则出 P 挡画面就停。改完请用 %s 打开本后台，车和手机重新连一次 WiFi。取消勾选会改回原来的地址。"
 
 msgid "Music over the car's Bluetooth"
 msgstr "音乐走车机蓝牙"
@@ -186,20 +186,20 @@ msgstr "诊断"
 msgid "Tesla offline checks"
 msgstr "特斯拉离线联网检查"
 
-msgid "Automatic (recommended)"
-msgstr "自动（推荐）"
+msgid "The LAN stays online for the whole Tesla mode: the Tesla joins and opens CarPlay even without a SIM signal (cold start, basement). Only the upstream (Tesla music/maps) comes and goes; the CarPlay page never reconnects. Automatic is recommended; Always answer also hides the real checks when the upstream works; Real network only means the Tesla will not join without an upstream."
+msgstr "特斯拉模式下局域网始终保持在线：哪怕没有 SIM 信号（冷启动、地库），特斯拉也能连上 WiFi 打开 CarPlay；只有上游外网（特斯拉自带音乐、地图）随信号通断，CarPlay 画面不会重连。推荐选「自动」；「始终代答」在有外网时也挡住真实联网检查；「仅用真实网络」在没有外网时特斯拉不会连上此 WiFi。"
 
-msgid "Enable only without upstream"
-msgstr "仅无上游时启用"
+msgid "Automatic (recommended): LAN always online, upstream switches by itself"
+msgstr "自动（推荐）：局域网常在线，外网自动切换"
 
-msgid "Off (use upstream)"
-msgstr "关闭（使用上游）"
+msgid "Always answer (even with upstream)"
+msgstr "始终代答（有外网时也代答）"
+
+msgid "Real network only (no join without upstream)"
+msgstr "仅用真实网络（无外网时不连）"
 
 msgid "Download diagnostics from the DashPlay settings page. Changes take about one minute and interrupt CarPlay briefly."
 msgstr "在 DashPlay 设置页下载诊断记录。修改后约 1 分钟生效，期间 CarPlay 会断一下。"
-
-msgid "Without a working SIM uplink, answer Tesla connectivity checks so it accepts this Wi-Fi. Tesla music and maps then have no internet; CarPlay still works. To keep Tesla apps online, insert a working SIM. The current F50 driver cannot join a phone hotspot while keeping its own hotspot. Automatic probes the WAN path and restores the original DNS and DHCP when it returns. This release needs an in-car retest, including loss of SIM signal."
-msgstr "没有可用的 SIM 上网时，替特斯拉回答联网检查，让它接受此 WiFi。特斯拉自带音乐和地图不能联网，CarPlay 正常。要让车机上网，请插可上网的 SIM 卡；F50 当前驱动不能一边连手机热点一边开热点。自动模式探测上游，恢复后还原 DNS 和 DHCP。本轮正式功能待实车复测，包括有卡但没信号的情况。"
 
 msgid "Program update"
 msgstr "程序更新"
@@ -260,3 +260,42 @@ msgstr "立即升级"
 
 msgid "Last checked: %s"
 msgstr "上次检查：%s"
+
+msgid "Media music"
+msgstr "媒体音乐"
+
+msgid "Navigation prompts"
+msgstr "导航播报"
+
+msgid "Alert sounds"
+msgstr "提示音"
+
+msgid "Phone calls"
+msgstr "通话"
+
+msgid "Bluetooth"
+msgstr "蓝牙"
+
+msgid "Choose CarPlay or the iPhone’s Bluetooth device. Shared with Box Settings in CarPlay; changing it reconnects CarPlay. Bluetooth volume is adjusted on the car or headphones. Select the iPhone audio output when needed."
+msgstr "选择 CarPlay 或 iPhone 的蓝牙设备。与 CarPlay 内的盒子设置同步；修改后 CarPlay 会重连。蓝牙音量请在车机或耳机上调整，必要时在 iPhone 选择输出。"
+
+msgid "For a Tesla. The router's Wi-Fi network moves to %s, which the Tesla browser opens (it refuses LAN addresses such as 192.168.x.x); pick the Tesla as the output for music, Siri and calls in the iPhone Control Center while navigation prompts stay louder on the page (to send no sound through CarPlay at all, use the Sound tab or Box Settings on the CarPlay screen); the fullscreen button works in the Tesla browser. Pair the iPhone with the Tesla over Bluetooth and pick it as the media source. In the Tesla's Wi-Fi settings turn on \"Remain connected in Drive\", else the picture stops out of Park. Afterwards open this admin page at %s and reconnect the car and phones to the Wi-Fi. Turning it off puts the previous address back."
+msgstr "适用于特斯拉：将路由器 WiFi 网段改为 %s（特斯拉浏览器不能访问 192.168.x.x 等局域网地址）。音乐、Siri 和通话在 iPhone 控制中心选特斯拉输出，导航播报留在网页并会放大（想让所有声音都不走 CarPlay，在「声音」页或 CarPlay 画面里的「盒子设置」改）；全屏按钮适配特斯拉浏览器。请将 iPhone 蓝牙连接车机，并选为媒体来源。在特斯拉 WiFi 设置中开启行驶时保持连接，否则挂挡后会断开。随后在 %s 打开后台，并将车机和手机重新连接 WiFi。关闭后恢复原网段。"
+
+msgid "Media, Siri and calls"
+msgstr "媒体、Siri 和通话"
+
+msgid "These three share one output choice. Select CarPlay or Bluetooth on the iPhone too. Navigation has its own output choice; alerts follow the iPhone notification route. Shared with Box Settings in CarPlay."
+msgstr "这三项共用一个输出选择，请同时在 iPhone 选择 CarPlay 或蓝牙输出。导航可以单独选择输出；提示音按 iPhone 的通知路径输出。与 CarPlay 盒子设置同步。"
+
+msgid "Sound output"
+msgstr "声音输出"
+
+msgid "Keep on CarPlay"
+msgstr "留在 CarPlay"
+
+msgid "Not through CarPlay"
+msgstr "不走 CarPlay"
+
+msgid "Keep on CarPlay: choose where music, Siri and calls play in the iPhone Control Center (the output icon on the music card); navigation prompts stay on the CarPlay page. Not through CarPlay: every sound, navigation included, plays on the iPhone or its Bluetooth device, and CarPlay is no longer listed in the Control Center. Shared with Box Settings in CarPlay; CarPlay reconnects briefly after a change."
+msgstr "留在 CarPlay：音乐、Siri 和通话从哪出，在 iPhone 控制中心（音乐卡片右上角的输出图标）选；导航播报一直在 CarPlay 网页。不走 CarPlay：所有声音（含导航）都由 iPhone 自己或它连的蓝牙播放，控制中心里不会再有 CarPlay。与 CarPlay 画面里的盒子设置同步；修改后 CarPlay 会短暂重连。"

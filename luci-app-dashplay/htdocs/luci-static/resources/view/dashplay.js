@@ -119,28 +119,38 @@ return view.extend({
 		o.placeholder = 'lan';
 		o.depends('wifi', 'external');
 
-		// A Tesla's browser refuses LAN addresses and hands the steering wheel to the car's own media only (2026-10-14):
-		// one switch for all of it, the LAN move of shared_lan, music, calls and Siri left to the car's Bluetooth,
-		// and the Tesla browser's fullscreen.
+		// One switch (scripts/onecloud/audio_routes.py, 2026-10-31): CarPlay keeps its sound and the iPhone's Control
+		// Center picks the output, or none goes through CarPlay. A per-category choice changed nothing on the iPhone.
+		o = s.taboption('sound', form.ListValue, 'audio_route_navigation', _('Sound output'),
+			_('Keep on CarPlay: choose where music, Siri and calls play in the iPhone Control Center (the output icon on the music card); navigation prompts stay on the CarPlay page. Not through CarPlay: every sound, navigation included, plays on the iPhone or its Bluetooth device, and CarPlay is no longer listed in the Control Center. Shared with Box Settings in CarPlay; CarPlay reconnects briefly after a change.'));
+		o.value('carplay', _('Keep on CarPlay'));
+		o.value('bluetooth', _('Not through CarPlay'));
+		o.default = 'carplay';
+		o.rmempty = false;
+		o.write = function(section_id, value) {
+			var data = this.map.data;
+			data.set('dashplay', section_id, 'audio_route_navigation', value);
+			['main', 'media', 'alert', 'siri', 'calls'].forEach(function(name) { data.unset('dashplay', section_id, 'audio_route_' + name); });
+		};
+
+		// Tesla controls network/browser behaviour. Explicit sound choices take precedence over legacy defaults.
 		o = s.taboption('car', form.Flag, 'tesla_mode', _('Tesla mode'),
-			_('For a Tesla. The router\'s Wi-Fi network moves to %s, which the Tesla browser opens (it refuses LAN addresses such as 192.168.x.x); music, calls and Siri are left to the car (both switches below, turned on); the fullscreen button works in the Tesla browser. Pair the iPhone with the Tesla over Bluetooth and pick it as the media source. In the Tesla\'s Wi-Fi settings turn on "Remain connected in Drive", else the picture stops out of Park. Afterwards open this admin page at %s and reconnect the car and phones to the Wi-Fi. Turning it off puts the previous address back.').format('100.96.0.1', 'http://100.96.0.1/'));
+			_('For a Tesla. The router\'s Wi-Fi network moves to %s, which the Tesla browser opens (it refuses LAN addresses such as 192.168.x.x); pick the Tesla as the output for music, Siri and calls in the iPhone Control Center while navigation prompts stay louder on the page (to send no sound through CarPlay at all, use the Sound tab or Box Settings on the CarPlay screen); the fullscreen button works in the Tesla browser. Pair the iPhone with the Tesla over Bluetooth and pick it as the media source. In the Tesla\'s Wi-Fi settings turn on "Remain connected in Drive", else the picture stops out of Park. Afterwards open this admin page at %s and reconnect the car and phones to the Wi-Fi. Turning it off puts the previous address back.').format('100.96.0.1', 'http://100.96.0.1/'));
 		o.rmempty = false;
 		o.default = '0';
-
-		// The same for any car whose own Bluetooth is paired with the iPhone; Tesla mode turns both on.
-		o = s.taboption('sound', form.Flag, 'car_music', _('Music over the car\'s Bluetooth'),
-			_('Pair the iPhone with the car over Bluetooth and pick it as the media source: the steering wheel, media card and volume then work as with any phone. The CarPlay page shows the screen and plays navigation prompts, louder. If music ever comes without sound, choose the car as audio output in the iPhone\'s Control Center.'));
-		o.rmempty = false;
-		o.default = '0';
-		o.retain = true;
-		o.depends('tesla_mode', '0');
-
-		o = s.taboption('sound', form.Flag, 'car_voice', _('Calls and Siri over the car\'s Bluetooth'),
-			_('Calls and Siri use the car\'s own microphone and speakers through its Bluetooth (the iPhone must be paired with the car), not the CarPlay page. Worth a try when calls through the page echo.'));
-		o.rmempty = false;
-		o.default = '0';
-		o.retain = true;
-		o.depends('tesla_mode', '0');
+		o.write = function(section_id, value) {
+			var config = this.uciconfig || this.section.uciconfig || this.map.config;
+			var sid = this.ucisection || section_id;
+			var key = this.ucioption || this.option;
+			var was = this.map.data.get(config, sid, key);
+			this.map.data.set(config, sid, key, value);
+			if (value === '1' && was !== '1') {
+				this.map.data.set(config, sid, 'car_music', '1');
+				this.map.data.set(config, sid, 'car_voice', '1');
+			}
+			if (value === '1')
+				this.map.data.set(config, sid, 'shared_lan', '0');
+		};
 
 		o = s.taboption('network', form.Value, 'settings_port', _('Settings page port'));
 		o.datatype = 'port';
@@ -179,7 +189,7 @@ return view.extend({
 		o = s.taboption('reach', form.DummyValue, '_reach', _('Usually not needed'));
 		o.rawhtml = true;
 		o.cfgvalue = function() {
-			return _('Try in this order: 1. The head unit warns that the certificate is not trusted: tap continue. 2. It offers no way to continue: install the DashPlay CA certificate on the head unit (DashPlay settings page, "Download the box CA certificate"), or, when it cannot install one, set an own name below. 3. It refuses to open a LAN address such as 192.168.x.x, even by name (Tesla does): turn on "Head unit refuses every LAN address" below, or, when the router and the head unit have IPv6, set "Public IPv6 address for the name" to "Also".');
+			return _('Try in this order: 1. The head unit warns that the certificate is not trusted: tap continue. 2. It offers no way to continue: install the DashPlay CA certificate on the head unit (DashPlay settings page, "Download the box CA certificate"), or, when it cannot install one, set an own name below. 3. It refuses to open a LAN address such as 192.168.x.x, even by name: for a Tesla turn on "Tesla mode" on the Car tab; for another head unit turn on "Head unit refuses every LAN address" below, or, when the router and the head unit have IPv6, set "Public IPv6 address for the name" to "Also".');
 		};
 
 		// The real address, not a "<name>" placeholder: descriptions are HTML, so that one rendered as "https://:18443/".
@@ -191,10 +201,11 @@ return view.extend({
 
 		// For car browsers that refuse every private address, by name too, and use no IPv6 on the Wi-Fi (Tesla,
 		// 2026-10-14): the LAN moves to 100.96.0.1/24, outside the private ranges (supervisor_openwrt.SHARED_LAN).
-		o = s.taboption('reach', form.Flag, 'shared_lan', _('Head unit refuses every LAN address (e.g. Tesla)'),
-			_('Tesla\'s browser opens no LAN address such as 192.168.x.x, not even by name. Turned on, the router\'s own Wi-Fi network moves to %s (devices get 100.96.0.x): that range is not a private one, so such browsers open it, and the address name and own name follow. Afterwards open this admin page at %s and reconnect the head unit and phones to the Wi-Fi. Turning it off puts the previous address back.').format('100.96.0.1', 'http://100.96.0.1/'));
+		o = s.taboption('reach', form.Flag, 'shared_lan', _('Head unit refuses every LAN address'),
+			_('For a head unit other than a Tesla whose browser opens no LAN address such as 192.168.x.x, not even by name (Tesla mode on the Car tab already does this, so this is hidden while it is on). Turned on, the router\'s own Wi-Fi network moves to %s (devices get 100.96.0.x): that range is not a private one, so such browsers open it, and the address name and own name follow. Afterwards open this admin page at %s and reconnect the head unit and phones to the Wi-Fi. Turning it off puts the previous address back.').format('100.96.0.1', 'http://100.96.0.1/'));
 		o.rmempty = false;
 		o.default = '0';
+		o.depends('tesla_mode', '0');
 
 		// For car browsers that refuse a private address: the router answers its own public IPv6 address itself,
 		// so the page still comes over the Wi-Fi (F50, 2026-10-13). Needs that address and the head unit on IPv6.
