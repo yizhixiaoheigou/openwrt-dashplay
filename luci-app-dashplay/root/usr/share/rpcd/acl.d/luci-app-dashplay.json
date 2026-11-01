@@ -23,6 +23,9 @@
         ],
         "/opt/dashplay/state/update-status.json": [
           "read"
+        ],
+        "/opt/dashplay/state/update-sources.json": [
+          "read"
         ]
       }
     },

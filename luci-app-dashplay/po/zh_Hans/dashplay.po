@@ -213,11 +213,38 @@ msgstr "每天检查新版本"
 msgid "Only shows that there is one; nothing is installed until you click \"Update now\". Before updating, the iPhones, certificates and settings are backed up; a version that does not start is replaced by the previous one."
 msgstr "只提示有新版本，点「立即升级」才会安装。升级前会备份 iPhone、证书和设置；新版本起不来会自动退回原来的版本。"
 
-msgid "Download mirror"
-msgstr "下载镜像"
+msgid "Download source"
+msgstr "下载源"
 
-msgid "Tried when GitHub cannot be reached. Releases are signed, so a mirror cannot change what is installed. Empty: the built-in mirror; \"none\": GitHub only."
-msgstr "连不上 GitHub 时改用这个地址前缀下载。发布带签名，镜像改不了装进来的内容。留空用内置的镜像；填 none 只用 GitHub。"
+msgid "Automatic measures GitHub and every mirror at once before an update and takes the fastest; a download that slows down goes on from the next one. A mirror chosen here is tried first, GitHub last. Releases are signed, so a mirror cannot change what is installed. Another address can be typed in (several separated by spaces)."
+msgstr "自动：升级前同时测 GitHub 和各个镜像，用最快的；下载中变慢会换下一个接着下。选定某个镜像则先用它，最后才连 GitHub。发布包有签名，镜像改不了装进来的内容。也可以直接填别的镜像地址（多个用空格隔开）。"
+
+msgid "Automatic (fastest, recommended)"
+msgstr "自动（测速选最快，推荐）"
+
+msgid "GitHub only"
+msgstr "只连 GitHub"
+
+msgid "Mirror addresses start with https://, e.g. https://gh-proxy.com/"
+msgstr "镜像地址要以 https:// 开头，例如 https://gh-proxy.com/"
+
+msgid "Measuring GitHub and every mirror (about 10 seconds)…"
+msgstr "正在同时测 GitHub 和各个镜像（约 10 秒）…"
+
+msgid "Last download source:"
+msgstr "上次下载源："
+
+msgid "Speed test failed:"
+msgstr "测速没有成功："
+
+msgid "Speed test %s, fastest first:"
+msgstr "%s 测速结果，从快到慢："
+
+msgid "unavailable"
+msgstr "不可用"
+
+msgid "Speed test"
+msgstr "测速"
 
 msgid "Updating:"
 msgstr "正在升级："
@@ -279,8 +306,8 @@ msgstr "蓝牙"
 msgid "Choose CarPlay or the iPhone’s Bluetooth device. Shared with Box Settings in CarPlay; changing it reconnects CarPlay. Bluetooth volume is adjusted on the car or headphones. Select the iPhone audio output when needed."
 msgstr "选择 CarPlay 或 iPhone 的蓝牙设备。与 CarPlay 内的盒子设置同步；修改后 CarPlay 会重连。蓝牙音量请在车机或耳机上调整，必要时在 iPhone 选择输出。"
 
-msgid "For a Tesla. The router's Wi-Fi network moves to %s, which the Tesla browser opens (it refuses LAN addresses such as 192.168.x.x); pick the Tesla as the output for music, Siri and calls in the iPhone Control Center while navigation prompts stay louder on the page (to send no sound through CarPlay at all, use the Sound tab or Box Settings on the CarPlay screen); the fullscreen button works in the Tesla browser. Pair the iPhone with the Tesla over Bluetooth and pick it as the media source. In the Tesla's Wi-Fi settings turn on \"Remain connected in Drive\", else the picture stops out of Park. Afterwards open this admin page at %s and reconnect the car and phones to the Wi-Fi. Turning it off puts the previous address back."
-msgstr "适用于特斯拉：将路由器 WiFi 网段改为 %s（特斯拉浏览器不能访问 192.168.x.x 等局域网地址）。音乐、Siri 和通话在 iPhone 控制中心选特斯拉输出，导航播报留在网页并会放大（想让所有声音都不走 CarPlay，在「声音」页或 CarPlay 画面里的「盒子设置」改）；全屏按钮适配特斯拉浏览器。请将 iPhone 蓝牙连接车机，并选为媒体来源。在特斯拉 WiFi 设置中开启行驶时保持连接，否则挂挡后会断开。随后在 %s 打开后台，并将车机和手机重新连接 WiFi。关闭后恢复原网段。"
+msgid "For a Tesla. The router's Wi-Fi network moves to %s, which the Tesla browser opens (it refuses LAN addresses such as 192.168.x.x); music, Siri and calls always play on the Tesla over Bluetooth (a moving Tesla does not let the page play music) while navigation prompts play louder on the page (when you hear no navigation, send it to the Tesla too on the Sound tab or in Box Settings on the CarPlay screen); the fullscreen button works in the Tesla browser. Pair the iPhone with the Tesla over Bluetooth and pick it as the media source. In the Tesla's Wi-Fi settings turn on \"Remain connected in Drive\", else the picture stops out of Park. Afterwards open this admin page at %s and reconnect the car and phones to the Wi-Fi. Turning it off puts the previous address back."
+msgstr "适用于特斯拉：将路由器 WiFi 网段改为 %s（特斯拉浏览器不能访问 192.168.x.x 等局域网地址）。音乐、Siri 和通话一定走特斯拉蓝牙（行车中特斯拉不让网页放音乐），导航播报在网页播放并会放大（听不到导航时，在「声音」页或 CarPlay 画面里的「盒子设置」改为也走特斯拉蓝牙）；全屏按钮适配特斯拉浏览器。请将 iPhone 蓝牙连接车机，并选为媒体来源。在特斯拉 WiFi 设置中开启行驶时保持连接，否则挂挡后会断开。随后在 %s 打开后台，并将车机和手机重新连接 WiFi。关闭后恢复原网段。"
 
 msgid "Media, Siri and calls"
 msgstr "媒体、Siri 和通话"
@@ -297,5 +324,5 @@ msgstr "留在 CarPlay"
 msgid "Not through CarPlay"
 msgstr "不走 CarPlay"
 
-msgid "Keep on CarPlay: choose where music, Siri and calls play in the iPhone Control Center (the output icon on the music card); navigation prompts stay on the CarPlay page. Not through CarPlay: every sound, navigation included, plays on the iPhone or its Bluetooth device, and CarPlay is no longer listed in the Control Center. Shared with Box Settings in CarPlay; CarPlay reconnects briefly after a change."
-msgstr "留在 CarPlay：音乐、Siri 和通话从哪出，在 iPhone 控制中心（音乐卡片右上角的输出图标）选；导航播报一直在 CarPlay 网页。不走 CarPlay：所有声音（含导航）都由 iPhone 自己或它连的蓝牙播放，控制中心里不会再有 CarPlay。与 CarPlay 画面里的盒子设置同步；修改后 CarPlay 会短暂重连。"
+msgid "Keep on CarPlay: choose where music, Siri and calls play in the iPhone Control Center (the output icon on the music card); navigation prompts stay on the CarPlay page. Not through CarPlay: every sound, navigation included, plays on the iPhone or its Bluetooth device, and CarPlay is no longer listed in the Control Center. In Tesla mode music, Siri and calls always play on the Tesla over Bluetooth and this only decides navigation prompts: Keep on CarPlay plays them on the CarPlay page, Not through CarPlay sends them to the Tesla too (pick it when you hear no navigation). Shared with Box Settings in CarPlay; CarPlay reconnects briefly after a change."
+msgstr "留在 CarPlay：音乐、Siri 和通话从哪出，在 iPhone 控制中心（音乐卡片右上角的输出图标）选；导航播报一直在 CarPlay 网页。不走 CarPlay：所有声音（含导航）都由 iPhone 自己或它连的蓝牙播放，控制中心里不会再有 CarPlay。特斯拉模式下音乐、Siri 和通话一定走特斯拉蓝牙，这里只决定导航播报：留在 CarPlay 时在 CarPlay 网页播放，不走 CarPlay 时也交给特斯拉蓝牙（听不到导航就选这个）。与 CarPlay 画面里的盒子设置同步；修改后 CarPlay 会短暂重连。"

@@ -122,7 +122,7 @@ return view.extend({
 		// One switch (scripts/onecloud/audio_routes.py, 2026-10-31): CarPlay keeps its sound and the iPhone's Control
 		// Center picks the output, or none goes through CarPlay. A per-category choice changed nothing on the iPhone.
 		o = s.taboption('sound', form.ListValue, 'audio_route_navigation', _('Sound output'),
-			_('Keep on CarPlay: choose where music, Siri and calls play in the iPhone Control Center (the output icon on the music card); navigation prompts stay on the CarPlay page. Not through CarPlay: every sound, navigation included, plays on the iPhone or its Bluetooth device, and CarPlay is no longer listed in the Control Center. Shared with Box Settings in CarPlay; CarPlay reconnects briefly after a change.'));
+			_('Keep on CarPlay: choose where music, Siri and calls play in the iPhone Control Center (the output icon on the music card); navigation prompts stay on the CarPlay page. Not through CarPlay: every sound, navigation included, plays on the iPhone or its Bluetooth device, and CarPlay is no longer listed in the Control Center. In Tesla mode music, Siri and calls always play on the Tesla over Bluetooth and this only decides navigation prompts: Keep on CarPlay plays them on the CarPlay page, Not through CarPlay sends them to the Tesla too (pick it when you hear no navigation). Shared with Box Settings in CarPlay; CarPlay reconnects briefly after a change.'));
 		o.value('carplay', _('Keep on CarPlay'));
 		o.value('bluetooth', _('Not through CarPlay'));
 		o.default = 'carplay';
@@ -133,21 +133,18 @@ return view.extend({
 			['main', 'media', 'alert', 'siri', 'calls'].forEach(function(name) { data.unset('dashplay', section_id, 'audio_route_' + name); });
 		};
 
-		// Tesla controls network/browser behaviour. Explicit sound choices take precedence over legacy defaults.
+		// Tesla controls network/browser behaviour and keeps music, Siri and calls on the Tesla's Bluetooth.
 		o = s.taboption('car', form.Flag, 'tesla_mode', _('Tesla mode'),
-			_('For a Tesla. The router\'s Wi-Fi network moves to %s, which the Tesla browser opens (it refuses LAN addresses such as 192.168.x.x); pick the Tesla as the output for music, Siri and calls in the iPhone Control Center while navigation prompts stay louder on the page (to send no sound through CarPlay at all, use the Sound tab or Box Settings on the CarPlay screen); the fullscreen button works in the Tesla browser. Pair the iPhone with the Tesla over Bluetooth and pick it as the media source. In the Tesla\'s Wi-Fi settings turn on "Remain connected in Drive", else the picture stops out of Park. Afterwards open this admin page at %s and reconnect the car and phones to the Wi-Fi. Turning it off puts the previous address back.').format('100.96.0.1', 'http://100.96.0.1/'));
+			_('For a Tesla. The router\'s Wi-Fi network moves to %s, which the Tesla browser opens (it refuses LAN addresses such as 192.168.x.x); music, Siri and calls always play on the Tesla over Bluetooth (a moving Tesla does not let the page play music) while navigation prompts play louder on the page (when you hear no navigation, send it to the Tesla too on the Sound tab or in Box Settings on the CarPlay screen); the fullscreen button works in the Tesla browser. Pair the iPhone with the Tesla over Bluetooth and pick it as the media source. In the Tesla\'s Wi-Fi settings turn on "Remain connected in Drive", else the picture stops out of Park. Afterwards open this admin page at %s and reconnect the car and phones to the Wi-Fi. Turning it off puts the previous address back.').format('100.96.0.1', 'http://100.96.0.1/'));
 		o.rmempty = false;
 		o.default = '0';
 		o.write = function(section_id, value) {
 			var config = this.uciconfig || this.section.uciconfig || this.map.config;
 			var sid = this.ucisection || section_id;
 			var key = this.ucioption || this.option;
-			var was = this.map.data.get(config, sid, key);
 			this.map.data.set(config, sid, key, value);
-			if (value === '1' && was !== '1') {
-				this.map.data.set(config, sid, 'car_music', '1');
-				this.map.data.set(config, sid, 'car_voice', '1');
-			}
+			// Tesla mode no longer reads car_music / car_voice (supervisor_openwrt.car_audio_args, 2026-11-01): music,
+			// Siri and calls are the Tesla's, navigation follows the Sound tab.
 			if (value === '1')
 				this.map.data.set(config, sid, 'shared_lan', '0');
 		};
@@ -179,9 +176,20 @@ return view.extend({
 		o.rmempty = false;
 		o.default = '1';
 
-		o = s.taboption('update', form.Value, 'update_mirror', _('Download mirror'),
-			_('Tried when GitHub cannot be reached. Releases are signed, so a mirror cannot change what is installed. Empty: the built-in mirror; "none": GitHub only.'));
-		o.placeholder = 'https://ghfast.top/';
+		// update.py MIRRORS (tests/onecloud/test_openwrt.py keeps the two lists the same). Empty: automatic.
+		var mirrors = [ 'https://gh-proxy.com/', 'https://gh-proxy.org/', 'https://edgeone.gh-proxy.com/', 'https://ghfast.top/',
+			'https://gh.dpik.top/', 'https://ghproxy.vip/', 'https://tvv.tw/', 'https://fastgit.cc/' ];
+		o = s.taboption('update', form.Value, 'update_mirror', _('Download source'),
+			_('Automatic measures GitHub and every mirror at once before an update and takes the fastest; a download that slows down goes on from the next one. A mirror chosen here is tried first, GitHub last. Releases are signed, so a mirror cannot change what is installed. Another address can be typed in (several separated by spaces).'));
+		o.value('', _('Automatic (fastest, recommended)'));
+		o.value('none', _('GitHub only'));
+		mirrors.forEach(function(m) { o.value(m, m.split('/')[2]); });
+		o.validate = function(section, value) {
+			if (!value || value == 'none' || value == 'auto')
+				return true;
+			return value.split(/\s+/).every(function(w) { return /^https?:\/\/[A-Za-z0-9.-]+(:\d+)?(\/[A-Za-z0-9._~%\/-]*)?$/.test(w); })
+				|| _('Mirror addresses start with https://, e.g. https://gh-proxy.com/');
+		};
 
 		o = s.taboption('debug', form.DummyValue, '_debug', _('Diagnostics'));
 		o.cfgvalue = function() { return _('Download diagnostics from the DashPlay settings page. Changes take about one minute and interrupt CarPlay briefly.'); };
@@ -260,15 +268,54 @@ return view.extend({
 			function line(title, text) {
 				return E('p', {}, [ E('strong', {}, title), text ? ' ' + text : '' ]);
 			}
+			function mb(bytes) { return (bytes / 1048576).toFixed(1); }
+			function speed(bytes) {
+				return bytes >= 1048576 ? (bytes / 1048576).toFixed(1) + ' MB/s' : Math.floor(bytes / 1024) + ' KB/s';
+			}
+			function host(source) { return source ? source.split('/')[2] : 'GitHub'; }
+			function downloading(progress) {
+				if (progress.phase != 'downloading' || !(progress.done || progress.total))
+					return [];
+				var words = [ progress.total ? mb(progress.done) + ' / ' + mb(progress.total) + ' MB' : mb(progress.done) + ' MB' ];
+				if (progress.speed)
+					words.push(speed(progress.speed));
+				if (progress.source)
+					words.push(progress.source);
+				var out = [];
+				if (progress.total)
+					out.push(E('progress', { 'max': progress.total, 'value': Math.min(progress.done, progress.total),
+						'style': 'width:100%;max-width:480px;height:10px' }));
+				out.push(E('p', {}, words.join(' · ')));
+				return out;
+			}
+			function ranking(sources) {
+				var now = Date.now() / 1000;
+				if (sources.measuring && now - sources.measuring < 120)
+					return [ E('p', {}, _('Measuring GitHub and every mirror (about 10 seconds)…')) ];
+				var out = [];
+				if (sources.used && sources.used_at)
+					out.push(line(_('Last download source:'), host(sources.used)));
+				if (sources.error)
+					out.push(line(_('Speed test failed:'), sources.error));
+				if (Array.isArray(sources.ranking) && sources.ranking.length) {
+					out.push(E('p', {}, _('Speed test %s, fastest first:').format(new Date(sources.measured_at * 1000).toLocaleString())));
+					out.push(E('ul', {}, sources.ranking.map(function(r) {
+						return E('li', {}, host(r.source) + ' — ' + (r.speed ? speed(r.speed) : _('unavailable')));
+					})));
+				}
+				return out;
+			}
 			function updateProgram() {
 				return Promise.all([
 					readJson('/opt/dashplay/state/update-check.json'),
-					readJson('/opt/dashplay/state/update-status.json')
+					readJson('/opt/dashplay/state/update-status.json'),
+					readJson('/opt/dashplay/state/update-sources.json')
 				]).then(function(data) {
-					var found = data[0], progress = data[1], now = Date.now() / 1000, items = [];
+					var found = data[0], progress = data[1], sources = data[2], now = Date.now() / 1000, items = [];
 					var busy = progress.phase && progress.phase != 'done' && progress.phase != 'failed' && now - progress.at < 1200;
 					if (busy) {
 						items.push(line(_('Updating:'), progress.message));
+						items = items.concat(downloading(progress));
 						items.push(E('p', {}, _('About 2–5 minutes; CarPlay is interrupted meanwhile.')));
 						return dom.content(box, items);
 					}
@@ -288,7 +335,8 @@ return view.extend({
 					}
 					else if (found.latest)
 						items.push(line(_('Up to date:'), found.latest));
-					var buttons = [ E('button', { 'class': 'btn cbi-button', 'click': ui.createHandlerFn(this, run, 'check') }, _('Check now')) ];
+					var buttons = [ E('button', { 'class': 'btn cbi-button', 'click': ui.createHandlerFn(this, run, 'check') }, _('Check now')),
+						' ', E('button', { 'class': 'btn cbi-button', 'click': ui.createHandlerFn(this, run, 'speedtest') }, _('Speed test')) ];
 					if (found.available && found.online && !found.error)
 						buttons.push(' ', E('button', {
 							'class': 'btn cbi-button cbi-button-action',
@@ -300,6 +348,7 @@ return view.extend({
 					items.push(E('p', {}, buttons));
 					if (found.checked_at)
 						items.push(E('p', { 'class': 'cbi-value-description' }, _('Last checked: %s').format(new Date(found.checked_at * 1000).toLocaleString())));
+					items = items.concat(ranking(sources));
 					return dom.content(box, items);
 				});
 			}
