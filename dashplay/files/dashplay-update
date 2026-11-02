@@ -5,5 +5,6 @@ case "$1" in
 	check) exec /usr/bin/python3 /opt/dashplay/update.py check --root /opt/dashplay ;;
 	start) exec /usr/bin/python3 /opt/dashplay/update.py launch --root /opt/dashplay ;;
 	speedtest) exec /usr/bin/python3 /opt/dashplay/update.py speedtest --root /opt/dashplay ;;
-	*) echo "usage: $0 check|start|speedtest" >&2; exit 2 ;;
+	versions) exec /usr/bin/python3 /opt/dashplay/version_manager.py open --root /opt/dashplay ;;
+	*) echo "usage: $0 check|start|speedtest|versions" >&2; exit 2 ;;
 esac

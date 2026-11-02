@@ -326,3 +326,9 @@ msgstr "不走 CarPlay"
 
 msgid "Keep on CarPlay: choose where music, Siri and calls play in the iPhone Control Center (the output icon on the music card); navigation prompts stay on the CarPlay page. Not through CarPlay: every sound, navigation included, plays on the iPhone or its Bluetooth device, and CarPlay is no longer listed in the Control Center. In Tesla mode music, Siri and calls always play on the Tesla over Bluetooth and this only decides navigation prompts: Keep on CarPlay plays them on the CarPlay page, Not through CarPlay sends them to the Tesla too (pick it when you hear no navigation). Shared with Box Settings in CarPlay; CarPlay reconnects briefly after a change."
 msgstr "留在 CarPlay：音乐、Siri 和通话从哪出，在 iPhone 控制中心（音乐卡片右上角的输出图标）选；导航播报一直在 CarPlay 网页。不走 CarPlay：所有声音（含导航）都由 iPhone 自己或它连的蓝牙播放，控制中心里不会再有 CarPlay。特斯拉模式下音乐、Siri 和通话一定走特斯拉蓝牙，这里只决定导航播报：留在 CarPlay 时在 CarPlay 网页播放，不走 CarPlay 时也交给特斯拉蓝牙（听不到导航就选这个）。与 CarPlay 画面里的盒子设置同步；修改后 CarPlay 会短暂重连。"
+
+msgid "Install another version / Restore previous version"
+msgstr "安装其他版本／恢复更新前版本"
+
+msgid "Could not open version selection"
+msgstr "无法打开版本选择"

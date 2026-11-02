@@ -346,6 +346,14 @@ return view.extend({
 							})
 						}, _('Update now')));
 					items.push(E('p', {}, buttons));
+					items.push(E('button', { 'class': 'btn cbi-button', 'click': ui.createHandlerFn(this, function() {
+						return fs.exec('/usr/libexec/dashplay-update', [ 'versions' ]).then(function(res) {
+							if (res.code) throw new Error(res.stderr || _('Could not open version selection'));
+							var info = JSON.parse(res.stdout), url = new URL(window.location.href);
+							url.protocol = 'http:'; url.port = String(info.port); url.pathname = '/'; url.search = ''; url.hash = info.token;
+							window.location.href = url.href;
+						}).catch(function(error) { ui.addNotification(null, E('p', {}, error.message), 'error'); });
+					}) }, _('Install another version / Restore previous version')));
 					if (found.checked_at)
 						items.push(E('p', { 'class': 'cbi-value-description' }, _('Last checked: %s').format(new Date(found.checked_at * 1000).toLocaleString())));
 					items = items.concat(ranking(sources));
