@@ -159,10 +159,10 @@ return view.extend({
 		o.description = _('The HTTPS port of the CarPlay page. Empty is 18443, or the port an older install saved; a change takes about a minute and interrupts CarPlay briefly. It must differ from the settings page port, 80, 443 and 7000.');
 
 		o = s.taboption('internet', form.ListValue, 'answer_tesla_checks', _('Tesla offline checks'),
-			_('The LAN stays online for the whole Tesla mode: the Tesla joins and opens CarPlay even without a SIM signal (cold start, basement). Only the upstream (Tesla music/maps) comes and goes; the CarPlay page never reconnects. Automatic is recommended; Always answer also hides the real checks when the upstream works; Real network only means the Tesla will not join without an upstream.'));
-		o.value('auto', _('Automatic (recommended): LAN always online, upstream switches by itself'));
+			_('Automatic answers connectivity checks locally at startup and during confirmed outages. After repeated upstream success, ordinary sites use normal DNS; each check service is released separately. These DNS changes do not restart Wi-Fi or CarPlay. Always answer keeps local check answers enabled. Real network only may prevent an offline Tesla from staying on Wi-Fi.'));
+		o.value('auto', _('Automatic (recommended): protect offline, release after recovery'));
 		o.value('1', _('Always answer (even with upstream)'));
-		o.value('0', _('Real network only (no join without upstream)'));
+		o.value('0', _('Real network only (offline Wi-Fi may disconnect)'));
 		o.default = 'auto';
 		o.depends('tesla_mode', '1');
 		// Online update (update.py): the daily check and an update run apart from the service, by /usr/libexec/dashplay-update.
@@ -226,17 +226,46 @@ return view.extend({
 
 		// For car browsers that refuse DashPlay's own certificate and offer no "continue" (2026-10-13): a public
 		// certificate needs a name of one's own. The router obtains it by DNS-01, so nothing has to reach it.
+		o = s.taboption('reach', form.ListValue, 'ddns_provider', _('Domain provider'));
+		o.value('duckdns', 'DuckDNS');
+		o.value('dnspod', 'DNSPod');
+		o.value('dynv6', 'dynv6');
+		o.default = 'duckdns';
+		o.rmempty = false;
+
 		o = s.taboption('reach', form.Value, 'duckdns_domain', _('Own name (DuckDNS sub-domain)'),
 			_('Only needed when the head unit\'s browser blocks the certificate warning with no way to continue. Sign up for free at duckdns.org, add a sub-domain and enter it with the token shown there. The address name then becomes that name (e.g. mycar.duckdns.org): DashPlay points it at this router and obtains a free Let\'s Encrypt certificate, renewed automatically, so the head unit opens the page without a warning. No port needs to be opened; the router needs internet access.'));
 		o.datatype = 'and(hostname,maxlength(63))';
 		o.placeholder = 'mycar';
+		o.depends('ddns_provider', 'duckdns');
 
 		o = s.taboption('reach', form.Value, 'duckdns_token', _('DuckDNS token'));
 		o.password = true;
+		o.depends('ddns_provider', 'duckdns');
 
-		// A trade-off: a released iPhone stays cool near a router left on; a page opened later waits ~7 s.
-		o = s.taboption('iphone', form.Value, 'idle_release', _('Release the iPhone after (seconds)'),
-			_('Without any page showing the picture for this long, wireless CarPlay ends and the iPhone stops sending its screen; opening the page invites it again (about 7 s). 0: never end it.'));
+		o = s.taboption('reach', form.Value, 'ddns_domain', _('Full domain name'),
+			_('Use a dedicated name hosted by DNSPod or created at dynv6. DashPlay obtains and renews its HTTPS certificate. On a client Wi-Fi network it also registers the local IPv4 address; on this router\'s Wi-Fi it answers locally. Conflicting A, AAAA or CNAME records are left untouched. Leave the name empty to disable.'));
+		o.datatype = 'hostname';
+		o.placeholder = 'box.example.com';
+		o.depends('ddns_provider', 'dnspod');
+		o.depends('ddns_provider', 'dynv6');
+
+		o = s.taboption('reach', form.Value, 'dnspod_id', _('DNSPod Token ID'));
+		o.datatype = 'uinteger';
+		o.depends('ddns_provider', 'dnspod');
+
+		o = s.taboption('reach', form.Value, 'dnspod_token', _('DNSPod Token'),
+			_('Use DNSPod API Token ID and Token, not Tencent Cloud SecretId/SecretKey.'));
+		o.password = true;
+		o.depends('ddns_provider', 'dnspod');
+		o = s.taboption('reach', form.Value, 'dynv6_token', _('dynv6 HTTP Token'),
+			_('Create an HTTP Token for this zone on the dynv6 Keys page.'));
+		o.password = true;
+		o.depends('ddns_provider', 'dynv6');
+
+		// Only wireless CarPlay is released when no viewer is present.
+		o = s.taboption('iphone', form.Value, 'idle_release', _('End wireless CarPlay when unwatched (seconds)'),
+			_('Wireless CarPlay ends after no page has shown the picture for this long. Opening the page attempts to reconnect. This setting does not apply to wired CarPlay or USB internet sharing. Default: 300 seconds. 0: never end automatically.'));
 		o.datatype = 'uinteger';
 		o.placeholder = '300';
 

@@ -111,11 +111,11 @@ msgstr "同时（与局域网地址并存）"
 msgid "Only (instead of the LAN address)"
 msgstr "只用（不给局域网地址）"
 
-msgid "Release the iPhone after (seconds)"
-msgstr "无人观看多久后释放 iPhone（秒）"
+msgid "End wireless CarPlay when unwatched (seconds)"
+msgstr "无人观看时结束无线 CarPlay（秒）"
 
-msgid "Without any page showing the picture for this long, wireless CarPlay ends and the iPhone stops sending its screen; opening the page invites it again (about 7 s). 0: never end it."
-msgstr "没有任何网页在看画面超过这个时间，就结束无线 CarPlay，iPhone 不再持续发送画面、不会发热；之后打开网页会重新邀请（约 7 秒出画面）。填 0 表示永不结束。"
+msgid "Wireless CarPlay ends after no page has shown the picture for this long. Opening the page attempts to reconnect. This setting does not apply to wired CarPlay or USB internet sharing. Default: 300 seconds. 0: never end automatically."
+msgstr "没有网页观看画面超过设定时间，就结束无线 CarPlay；再次打开画面会尝试重新连接。此设置不作用于有线 CarPlay 或 USB 共享网络。默认 300 秒，0 表示不自动结束。"
 
 msgid "Own name (DuckDNS sub-domain)"
 msgstr "自己的域名（DuckDNS 子域名）"
@@ -186,17 +186,17 @@ msgstr "诊断"
 msgid "Tesla offline checks"
 msgstr "特斯拉离线联网检查"
 
-msgid "The LAN stays online for the whole Tesla mode: the Tesla joins and opens CarPlay even without a SIM signal (cold start, basement). Only the upstream (Tesla music/maps) comes and goes; the CarPlay page never reconnects. Automatic is recommended; Always answer also hides the real checks when the upstream works; Real network only means the Tesla will not join without an upstream."
-msgstr "特斯拉模式下局域网始终保持在线：哪怕没有 SIM 信号（冷启动、地库），特斯拉也能连上 WiFi 打开 CarPlay；只有上游外网（特斯拉自带音乐、地图）随信号通断，CarPlay 画面不会重连。推荐选「自动」；「始终代答」在有外网时也挡住真实联网检查；「仅用真实网络」在没有外网时特斯拉不会连上此 WiFi。"
+msgid "Automatic answers connectivity checks locally at startup and during confirmed outages. After repeated upstream success, ordinary sites use normal DNS; each check service is released separately. These DNS changes do not restart Wi-Fi or CarPlay. Always answer keeps local check answers enabled. Real network only may prevent an offline Tesla from staying on Wi-Fi."
+msgstr "自动模式在启动和确认断网时保留联网检测代答；连续确认外网恢复后，普通网站正常解析，各个联网检测服务分别放行。DNS 切换不重启 WiFi 或 CarPlay。「始终代答」固定保留代答；「仅用真实网络」可能让离线的特斯拉断开 WiFi。"
 
-msgid "Automatic (recommended): LAN always online, upstream switches by itself"
-msgstr "自动（推荐）：局域网常在线，外网自动切换"
+msgid "Automatic (recommended): protect offline, release after recovery"
+msgstr "自动（推荐）：断网保护，恢复后放行"
 
 msgid "Always answer (even with upstream)"
 msgstr "始终代答（有外网时也代答）"
 
-msgid "Real network only (no join without upstream)"
-msgstr "仅用真实网络（无外网时不连）"
+msgid "Real network only (offline Wi-Fi may disconnect)"
+msgstr "仅用真实网络（断网时可能断开 WiFi）"
 
 msgid "Download diagnostics from the DashPlay settings page. Changes take about one minute and interrupt CarPlay briefly."
 msgstr "在 DashPlay 设置页下载诊断记录。修改后约 1 分钟生效，期间 CarPlay 会断一下。"
@@ -332,3 +332,27 @@ msgstr "安装其他版本／恢复更新前版本"
 
 msgid "Could not open version selection"
 msgstr "无法打开版本选择"
+
+msgid "Domain provider"
+msgstr "域名服务商"
+
+msgid "Full domain name"
+msgstr "完整域名"
+
+msgid "DNSPod Token ID"
+msgstr "DNSPod Token ID"
+
+msgid "DNSPod Token"
+msgstr "DNSPod Token"
+
+msgid "dynv6 HTTP Token"
+msgstr "dynv6 HTTP Token"
+
+msgid "Use DNSPod API Token ID and Token, not Tencent Cloud SecretId/SecretKey."
+msgstr "填写 DNSPod API Token 的 ID 和 Token，不是腾讯云 SecretId/SecretKey。"
+
+msgid "Create an HTTP Token for this zone on the dynv6 Keys page."
+msgstr "在 dynv6 的 Keys 页面创建可管理该域名的 HTTP Token。"
+
+msgid "Use a dedicated name hosted by DNSPod or created at dynv6. DashPlay obtains and renews its HTTPS certificate. On a client Wi-Fi network it also registers the local IPv4 address; on this router's Wi-Fi it answers locally. Conflicting A, AAAA or CNAME records are left untouched. Leave the name empty to disable."
+msgstr "使用由 DNSPod 托管或在 dynv6 创建的专用域名。DashPlay 自动申请并续签 HTTPS 证书；连车机热点或随身 Wi-Fi 时登记局域网 IPv4 地址，连本路由器热点时由路由器直接解析。遇到冲突的 A、AAAA 或 CNAME 记录会提示处理，不覆盖原记录。域名留空表示关闭。"
